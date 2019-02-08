@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "145607197400",
+    "firebase_url": "https://incubator-demo.firebaseio.com",
+    "project_id": "incubator-demo",
+    "storage_bucket": "incubator-demo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145607197400:android:93f031385c5531dc",
+        "android_client_info": {
+          "package_name": "cs408.incubator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145607197400-tsf8ku7jv98jcv7oge0k92v696hkt1qq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cs408.incubator",
+            "certificate_hash": "bb863b5c86c6dae1095b191bf09a6cc957d0ac9a"
+          }
+        },
+        {
+          "client_id": "145607197400-2cta670q4t9n7tj00o547h5m7g02fjpe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhngsM1CgyN91if6F6FFsJGeFEZeAE2pc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145607197400-2cta670q4t9n7tj00o547h5m7g02fjpe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

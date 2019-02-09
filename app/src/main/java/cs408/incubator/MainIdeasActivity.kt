@@ -77,8 +77,13 @@ class MainIdeasActivity : AppCompatActivity() {
                 val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT)
                 layout.addView(mDragList,params)
+
+                val ideaTitle = data?.getStringExtra("IDEA_TITLE")
+                val ideaID = data?.getStringExtra("IDEA_ID")
+                val v: Long = (ideaArray.size + 1).toLong()
+
                 val newArray = ArrayList<Pair<Long,String>>()
-                newArray.add(Pair(111,"New Idea-sbfabif"))
+                newArray.add(Pair(v,"$ideaTitle-$ideaID"))
                 newArray.addAll(ideaArray)
 
 
@@ -86,7 +91,7 @@ class MainIdeasActivity : AppCompatActivity() {
                 val listAdapter = IdeaItemAdapter(newArray,R.layout.idea_item,true)
                 mDragList.setAdapter(listAdapter,true)
                 mDragList.setCanDragHorizontally(false)
-                ideaArray.add(Pair(111,"New Ideda-sbfabif"))
+                ideaArray.add(Pair(v,"$ideaTitle-$ideaID"))
             }
             else if(resultCode == -1){
                 Toast.makeText(applicationContext,"No idea added",Toast.LENGTH_SHORT).show()

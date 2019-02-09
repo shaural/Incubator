@@ -29,13 +29,15 @@ class MainIdeasActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         val actionbarEvent: ActionBar? = supportActionBar
         actionbarEvent.apply {
-
+            this!!.setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
         val mDragList = findViewById<DragListView>(R.id.ideaList)
+
         mDragList.setDragListListener(object : DragListView.DragListListener {
             override fun onItemDragging(itemPosition: Int, x: Float, y: Float) {
-                 //To change body of created functions use File | Settings | File Templates.
+                //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemDragStarted(position: Int) {
@@ -48,20 +50,20 @@ class MainIdeasActivity : AppCompatActivity() {
                 }
             }
         })
+
         var ideaArray = ArrayList<Pair<Long,String>>()
         for(i in 0..25){
-            ideaArray.add(Pair(i.toLong(), "Idea $i"))
+            ideaArray.add(Pair(i.toLong(), "Idea-$i"))
         }
 
         mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
-        val listAdapter = IdeaItemAdapter(ideaArray,R.layout.idea_item,false)
+        val listAdapter = IdeaItemAdapter(ideaArray,R.layout.idea_item,true)
         mDragList.setAdapter(listAdapter,true)
         mDragList.setCanDragHorizontally(false)
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+
         }
     }
 

@@ -34,7 +34,9 @@ class IdeaItemAdapter extends DragItemAdapter<Pair<Long, String>, IdeaItemAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         String text = mItemList.get(position).second;
-        holder.mText.setText(text);
+        String[] info = text.split( "-" );
+        holder.mText.setText(info[0]);
+        holder.mText.setTag(info[1]);
         holder.itemView.setTag(mItemList.get(position));
     }
 
@@ -47,13 +49,13 @@ class IdeaItemAdapter extends DragItemAdapter<Pair<Long, String>, IdeaItemAdapte
         TextView mText;
 
         ViewHolder(final View itemView) {
-            super(itemView,R.id.ideaTitle, mDragOnLongPress);
+            super(itemView,R.id.itemLayout, mDragOnLongPress);
             mText = (TextView) itemView.findViewById(R.id.ideaTitle);
         }
 
         @Override
         public void onItemClicked(View view) {
-            Toast.makeText(view.getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), mText.getText()+" "+ mText.getTag()+ " clicked", Toast.LENGTH_SHORT).show();
         }
 
         @Override

@@ -13,13 +13,21 @@
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-    <com.woxthebox.draglistview.DragListView
-        android:id="@+id/ideaList"
+    <LinearLayout
+        android:id="@+id/linList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize">
 
-    </com.woxthebox.draglistview.DragListView>
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/ideaList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.woxthebox.draglistview.DragListView>
+
+    </LinearLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

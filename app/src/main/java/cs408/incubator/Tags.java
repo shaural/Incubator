@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -52,8 +53,37 @@ public class Tags extends AppCompatActivity {
                     // argument position gives the index of item which is clicked
                     public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
                     {
-                        String selected_tag = tag_list.get(position);
+                        final String selected_tag = tag_list.get(position);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
+                        builder.setTitle("Update Tag");
 
+// Set up the input
+                        final EditText input = new EditText(Tags.this);
+                        input.setText(selected_tag);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
+                        builder.setView(input);
+
+// Set up the buttons
+                        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String m_Text = input.getText().toString();
+
+                                docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
+                                docRef.update("Tags", FieldValue.arrayUnion(m_Text));
+                                finish();
+                                startActivity(getIntent());
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
                     }
                 });
                 lv_tags.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

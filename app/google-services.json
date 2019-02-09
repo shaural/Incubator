@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "145607197400-fgo47r27ho8dmhpf257ilf3rs764clvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cs408.incubator",
+            "certificate_hash": "e8d8aefe6f08243ea517d899e5ecf8eba1ad12b6"
+          }
+        },
+        {
           "client_id": "145607197400-tsf8ku7jv98jcv7oge0k92v696hkt1qq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

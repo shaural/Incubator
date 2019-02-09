@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main_ideas.*
 import android.widget.Toast
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
+import firestore_library.addUser
 
 
 class MainIdeasActivity : AppCompatActivity() {
@@ -37,6 +38,8 @@ class MainIdeasActivity : AppCompatActivity() {
             this!!.setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
         }
+
+        addUser()
 
         mDragList = findViewById<DragListView>(R.id.ideaList)
 

@@ -1,5 +1,6 @@
 package firestore_library
 
+import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,15 +13,25 @@ val USERNAME = "ydassani"
 
 fun addIdea(idea : Idea, callback: (String)->Unit) {
     val doc: CollectionReference = getDB().collection("Ideas")
-    var map = HashMap<String,Idea>()
-    map.put("1",idea)
+    var map = HashMap<String,Any>()
+    map.put("Name",idea.getTitle())
+    map.put("Description",idea.getDesc())
+    map.put("Collaborators",idea.getCollaborators())
+    map.put("Tags",idea.getTags())
     var ideaRef = ""
     getDB().collection("Ideas").add(map)
             .addOnSuccessListener {
                 ideaRef = it.id
                 println("Success" + it.id )
-                /**getDB().collection("Users").document(USERNAME)
-                        .update("Ideas_Owned",FieldValue.arrayUnion(ideaRef))*/
+
+                getDB().collection("Users").document(USERNAME)
+                        .update("Ideas_Owned",FieldValue.arrayUnion(ideaRef))
+                        .addOnSuccessListener {
+                            println("Added ID to User")
+                        }
+                        .addOnFailureListener {
+                            println("Fail! ID not added to User")
+                        }
 
                 callback(ideaRef)
             }
@@ -28,6 +39,32 @@ fun addIdea(idea : Idea, callback: (String)->Unit) {
                 println("FAILLL")
             }
 
+}
+
+fun getIdeas(callback: (ArrayList<String>) -> Unit){
+
+    val ideakeys = ArrayList<String>()
+    getDB().collection("Users").document(USERNAME).get()
+            .addOnSuccessListener {
+                ideakeys.addAll(it["Ideas_Owned"] as Collection<String>)
+            }
+            .addOnFailureListener {
+                println("Failure")
+            }
+}
+
+fun addUser() {
+    val blankList = ArrayList<String>()
+    var map = HashMap<String, Any>()
+    map.put("Name", "Test User")
+    map.put("Ideas_Owned", blankList)
+    getDB().collection("Users").document(USERNAME).set(map)
+            .addOnSuccessListener {
+                println("User Added")
+            }
+            .addOnFailureListener {
+                println("Failed adding user")
+            }
 }
 
 fun getDB(): FirebaseFirestore {

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Tags extends AppCompatActivity {
+String idea_id = "irWRcr2YIjDxi2kgEn93";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class Tags extends AppCompatActivity {
         setContentView(R.layout.activity_tags);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Ideas").document("irWRcr2YIjDxi2kgEn93");
+        final DocumentReference docRef = db.collection("Ideas").document(idea_id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -57,14 +57,11 @@ public class Tags extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
                         builder.setTitle("Update Tag");
 
-// Set up the input
                         final EditText input = new EditText(Tags.this);
                         input.setText(selected_tag);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                         input.setInputType(InputType.TYPE_CLASS_TEXT);
                         builder.setView(input);
 
-// Set up the buttons
                         builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -91,7 +88,7 @@ public class Tags extends AppCompatActivity {
                     public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                                    int pos, long id) {
                         final String selected_tag = tag_list.get(pos);
-                        final DocumentReference docRef = db.collection("Ideas").document("irWRcr2YIjDxi2kgEn93");
+                        final DocumentReference docRef = db.collection("Ideas").document(idea_id);
                         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int choice) {
@@ -125,7 +122,7 @@ public class Tags extends AppCompatActivity {
         EditText et_tag = (EditText)findViewById(R.id.et_tag);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("Ideas").document("irWRcr2YIjDxi2kgEn93");
+        DocumentReference docRef = db.collection("Ideas").document(idea_id);
         // Atomically add a new region to the "regions" array field.
         docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString()));
         Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();

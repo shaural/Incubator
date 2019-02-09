@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -25,13 +27,11 @@ public class Tags extends AppCompatActivity {
     public void onClickbtnAddTag(View v)
     {
         EditText et_tag = (EditText)findViewById(R.id.et_tag);
-        Map<String, Object> tag_map = new HashMap<>();
-        tag_map.put(et_tag.getText().toString(), true);
-
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Ideas").document("irWRcr2YIjDxi2kgEn93")
-                .set(tag_map, SetOptions.merge());
+        DocumentReference docRef = db.collection("Ideas").document("irWRcr2YIjDxi2kgEn93");
+        // Atomically add a new region to the "regions" array field.
+        docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString()));
         Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();
     }
 }

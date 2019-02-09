@@ -1,8 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".AddIdeaActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/addIdeaToolbar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
+
+    <EditText
+        android:id="@+id/addTitle"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:inputType="textCapSentences"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15pt"
+        android:hint="@string/title"/>
+
+    <EditText
+        android:id="@+id/addDesc"
+        android:layout_marginLeft="20dp"
+        android:inputType="textMultiLine|textCapSentences"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="9pt"
+        android:hint="@string/desc"/>
+
+    <EditText
+        android:id="@+id/addCollab"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="9pt"
+        android:inputType="textEmailAddress|textMultiLine"
+        android:hint="@string/collab"/>
+
+    <EditText
+        android:id="@+id/addTag"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="9pt"
+        android:inputType="textEmailAddress|textMultiLine"
+        android:hint="@string/tags"/>
+
+
+
+
+
+</LinearLayout>

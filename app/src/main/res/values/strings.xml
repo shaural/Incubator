@@ -16,4 +16,11 @@
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_main_ideas">Incubator</string>
     <string name="title_activity_idea_details">IdeaDetailsActivity</string>
+    <string name="title_activity_add_idea">Add Idea</string>
+
+    <!-- Strings for adding idea -->
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="collab">Add Collaborators</string>
+    <string name="tags">Add Tags</string>
 </resources>

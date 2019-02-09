@@ -3,6 +3,7 @@ package cs408.incubator
 import android.app.PendingIntent.getActivity
 import android.content.ClipData
 import android.content.ClipDescription
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
@@ -63,7 +64,8 @@ class MainIdeasActivity : AppCompatActivity() {
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
-
+            val intent = Intent(this,AddIdeaActivity::class.java)
+            startActivity(intent)
         }
     }
 

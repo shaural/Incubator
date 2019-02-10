@@ -21,10 +21,13 @@ import android.widget.Toast
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
 import firestore_library.addUser
+import firestore_library.getIdeas
+import firestore_library.getIdeasByID
 
 
 class MainIdeasActivity : AppCompatActivity() {
     val REQ_CODE = 1
+    var count = (0).toLong()
     private lateinit var mDragList: DragListView
     private lateinit var ideaArray: ArrayList<Pair<Long,String>>
 
@@ -39,7 +42,6 @@ class MainIdeasActivity : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
-        addUser()
 
         mDragList = findViewById<DragListView>(R.id.ideaList)
 
@@ -60,15 +62,36 @@ class MainIdeasActivity : AppCompatActivity() {
         })
 
         ideaArray = ArrayList()
-        mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
-        val listAdapter = IdeaItemAdapter(ideaArray,R.layout.idea_item,true)
-        mDragList.setAdapter(listAdapter,true)
-        mDragList.setCanDragHorizontally(false)
+        getIdeas(::userIdeaKeys)
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
             val intent = Intent(this,AddIdeaActivity::class.java)
             startActivityForResult(intent,REQ_CODE)
+        }
+
+
+
+    }
+
+    fun userIdeaKeys(keys: ArrayList<String>){
+        count = keys.size.toLong()
+        println(count)
+        for(id in keys){
+            getIdeasByID(id,::addToIdeaList)
+        }
+
+
+    }
+
+    fun addToIdeaList(ideaInfo : String){
+        ideaArray.add(Pair(count,ideaInfo))
+        println(ideaArray.toString())
+        if(count --> 0){
+            mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
+            val listAdapter = IdeaItemAdapter(ideaArray,R.layout.idea_item,true)
+            mDragList.setAdapter(listAdapter,false)
+            mDragList.setCanDragHorizontally(false)
         }
     }
 

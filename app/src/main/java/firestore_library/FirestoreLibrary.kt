@@ -47,10 +47,27 @@ fun getIdeas(callback: (ArrayList<String>) -> Unit){
     getDB().collection("Users").document(USERNAME).get()
             .addOnSuccessListener {
                 ideakeys.addAll(it["Ideas_Owned"] as Collection<String>)
+                println(ideakeys)
+                callback(ideakeys)
             }
             .addOnFailureListener {
                 println("Failure")
             }
+
+}
+
+fun getIdeasByID(key: String, callback: (String) -> Unit) {
+
+    getDB().collection("Ideas").document(key).get()
+            .addOnSuccessListener { idea ->
+                val ideaInfo = "" + idea["Name"] + "-"+ key
+                println(ideaInfo)
+                callback(ideaInfo)
+            }
+            .addOnFailureListener {
+                println("Failed to find Idea with $key")
+            }
+
 }
 
 fun addUser() {

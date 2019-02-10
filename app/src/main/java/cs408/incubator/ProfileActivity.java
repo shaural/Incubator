@@ -109,6 +109,8 @@ public class ProfileActivity extends AppCompatActivity {
                         oldName.setText(name);
                     } else {
                         Log.d(TAG, "No such document");
+                        display_name.setText("Please Enter your Name");
+                        oldName.setText("Please Enter your Name");
                     }
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());

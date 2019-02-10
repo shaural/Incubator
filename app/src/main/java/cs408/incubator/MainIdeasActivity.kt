@@ -28,6 +28,7 @@ import android.support.v4.view.MenuItemCompat
 import android.view.MenuItem
 
 
+
 class MainIdeasActivity : AppCompatActivity() {
     val REQ_CODE = 1
     var count = (0).toLong()
@@ -266,7 +267,6 @@ class MainIdeasActivity : AppCompatActivity() {
         val listAdapter = IdeaItemAdapter(tempSearch,R.layout.idea_item,true)
         dragList.setAdapter(listAdapter,false)
         dragList.setCanDragHorizontally(false)
-
 
     }
 

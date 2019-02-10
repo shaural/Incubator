@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ItemActivity"
+            android:label="My Tasks"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".IdeaDetailsActivity"
             android:label="@string/title_activity_idea_details"

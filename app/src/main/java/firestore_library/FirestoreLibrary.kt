@@ -76,9 +76,9 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
 
 }
 fun setPriority(porder: ArrayList<String>) {
-//    for (i in porder) {
-//        getDB().collection("Users").document(USERNAME).update("Priority", FieldValue.arrayRemove(i))
-//    }
+    for (i in porder) {
+        getDB().collection("Users").document(USERNAME).update("Priority", FieldValue.arrayRemove(i))
+    }
     for (i in porder) {
         println(i)
         getDB().collection("Users").document(USERNAME)

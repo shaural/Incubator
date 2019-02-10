@@ -1,5 +1,6 @@
 package cs408.incubator;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+
 public class LoginActivity extends AppCompatActivity {
+
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
@@ -27,6 +30,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /** Remove below line. It skips auth -- for testing
+         *
+         */
+        Intent intent = new Intent(this,MainIdeasActivity.class);
+        startActivity(intent);
+        finish();
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

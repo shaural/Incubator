@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,12 +31,13 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+        Log.d("LoginActivity", "Login Start Activity start");
 
         /* Log In Check */
-//        if (auth.getCurrentUser() != null) {
-//            startActivity(new Intent(LoginActivity.this, MainIdeasActivity.class));
-//            finish();
-//        }
+        if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, MainIdeasActivity.class));
+            finish();
+        }
 
         // set the view now
         setContentView(R.layout.activity_login);

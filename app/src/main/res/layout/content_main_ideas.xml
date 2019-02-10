@@ -8,4 +8,11 @@
     tools:context=".MainIdeasActivity"
     tools:showIn="@layout/activity_main_ideas">
 
+    <Button
+        android:id="@+id/btn_to_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="101dp" />
 </android.support.constraint.ConstraintLayout>

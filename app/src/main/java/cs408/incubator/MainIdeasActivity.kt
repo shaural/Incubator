@@ -14,6 +14,8 @@ import android.support.v4.util.Pair
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
+import android.view.Menu
 import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
 import kotlinx.android.synthetic.main.activity_main_ideas.*
@@ -22,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
 import firestore_library.*
-import java.io.File
 
 
 class MainIdeasActivity : AppCompatActivity() {
@@ -189,6 +190,38 @@ class MainIdeasActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext,"No idea added",Toast.LENGTH_SHORT).show()
             }
         }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search_idea, menu)
+        val searchItem = menu?.findItem(R.id.search_idea)
+        searchItem?.expandActionView()
+
+        if (searchItem != null) {
+            val searchView = searchItem.actionView as SearchView
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    // when enter/search is pressed display matched results
+                    getSearch(query.toString(),::searchKeys)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+//                  Do nothing while typing
+                    return false
+                }
+            })
+        }
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    fun searchKeys(skeys: ArrayList<String>){
+        println("In callback")
+        println(skeys.toString())
+
 
     }
 

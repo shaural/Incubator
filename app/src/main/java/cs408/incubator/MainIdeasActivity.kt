@@ -14,6 +14,7 @@ import android.support.v4.util.Pair
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
 import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
 import kotlinx.android.synthetic.main.activity_main_ideas.*
@@ -129,6 +130,14 @@ class MainIdeasActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search_idea, menu)
+        val searchItem = menu?.findItem(R.id.search_idea)
+        searchItem?.expandActionView()
+
+        return super.onCreateOptionsMenu(menu)
     }
 
 }

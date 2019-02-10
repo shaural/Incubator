@@ -143,17 +143,13 @@ class MainIdeasActivity : AppCompatActivity() {
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    print(query)
+                    // when enter/search is pressed display matched results
+
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    if (newText!!.toString().isNotEmpty()) {
-                        print(newText)
-                    }
-                    else {
-                        print(newText)
-                    }
+//                  Do nothing while typing
                     return false
                 }
             })

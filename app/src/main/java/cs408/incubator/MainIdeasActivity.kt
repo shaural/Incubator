@@ -14,6 +14,7 @@ import android.support.v4.util.Pair
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
@@ -136,6 +137,27 @@ class MainIdeasActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_search_idea, menu)
         val searchItem = menu?.findItem(R.id.search_idea)
         searchItem?.expandActionView()
+
+        if (searchItem != null) {
+            val searchView = searchItem.actionView as SearchView
+
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    print(query)
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText!!.toString().isNotEmpty()) {
+                        print(newText)
+                    }
+                    else {
+                        print(newText)
+                    }
+                    return false
+                }
+            })
+        }
 
         return super.onCreateOptionsMenu(menu)
     }

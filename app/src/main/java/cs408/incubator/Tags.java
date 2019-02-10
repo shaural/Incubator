@@ -131,4 +131,9 @@ String idea_id = "irWRcr2YIjDxi2kgEn93";
         finish();
         startActivity(getIntent());
     }
+
+    public void onClickbtnBack(View v)
+    {
+        this.finish();
+    }
 }

@@ -91,13 +91,13 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                         var temp = document.data["Name"].toString()
                         if (temp.contains(query)) {
                             // match
-                            searchIdeas.add(document.id)
+                            searchIdeas.add("" +document.data["Name"] + "-"+document.id)
                         } else {
                             if(document.data["Tags"] != null) {
                                 val list = document.data["Tags"] as ArrayList<String>
                                 if (list.contains(query)) {
                                     // tag matched
-                                    searchIdeas.add(document.id)
+                                    searchIdeas.add("" +document.data["Name"] + "-"+document.id)
                                 }
                             }
                         }

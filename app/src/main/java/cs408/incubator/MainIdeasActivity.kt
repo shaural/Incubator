@@ -22,9 +22,7 @@ import kotlinx.android.synthetic.main.activity_main_ideas.*
 import android.widget.Toast
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
-import firestore_library.addUser
-import firestore_library.getIdeas
-import firestore_library.getIdeasByID
+import firestore_library.*
 
 
 class MainIdeasActivity : AppCompatActivity() {
@@ -144,7 +142,7 @@ class MainIdeasActivity : AppCompatActivity() {
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     // when enter/search is pressed display matched results
-
+                    getSearch(query.toString(),::searchKeys)
                     return false
                 }
 
@@ -156,6 +154,13 @@ class MainIdeasActivity : AppCompatActivity() {
         }
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    fun searchKeys(skeys: ArrayList<String>){
+        println("In callback")
+        println(skeys.toString())
+
+
     }
 
 }

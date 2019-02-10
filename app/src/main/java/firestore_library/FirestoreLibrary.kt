@@ -120,7 +120,6 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
     getDB().collection("Ideas").document(key).get()
             .addOnSuccessListener { idea ->
                 val ideaInfo = "" + idea["Name"] + "-" + key
-                println(ideaInfo)
                 callback(ideaInfo)
             }
             .addOnFailureListener {
@@ -128,6 +127,40 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
             }
 
 }
+
+fun getIdeasByPriority(callback: (ArrayList<String>) -> Unit){
+    val ideakeys = ArrayList<String>()
+    getDB().collection("Users").document(USERNAME).get()
+            .addOnSuccessListener {
+                ideakeys.addAll(it["Priority"] as Collection<String>)
+                println(ideakeys)
+                callback(ideakeys)
+            }
+            .addOnFailureListener {
+                println("Failure")
+            }
+}
+
+fun setPriority(porder: ArrayList<String>) {
+    for (i in porder) {
+        getDB().collection("Users").document(USERNAME).update("Priority", FieldValue.arrayRemove(i))
+    }
+    for (i in porder) {
+        println(i)
+        getDB().collection("Users").document(USERNAME)
+                .update("Priority", FieldValue.arrayUnion(i))
+                .addOnSuccessListener {
+                    println("added")
+                }
+                .addOnFailureListener {
+                    println("fail")
+                }
+    }
+
+}
+//    getDB().collection("Users").document("Priority")
+//            .update("Priority", FieldValue.arrayUnion(str))
+//    println(str)
 
 fun verifyUsers(emails: String, callback: (Boolean) -> Unit) {
     val users = ArrayList<String>()

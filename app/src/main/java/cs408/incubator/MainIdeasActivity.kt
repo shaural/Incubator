@@ -20,6 +20,7 @@ import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
 import kotlinx.android.synthetic.main.activity_main_ideas.*
 import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
 import firestore_library.*
@@ -28,6 +29,8 @@ import firestore_library.*
 class MainIdeasActivity : AppCompatActivity() {
     val REQ_CODE = 1
     var count = (0).toLong()
+    private lateinit var ideaInfoList: LinkedHashMap<String,String>
+    private lateinit var ideaByPrio: ArrayList<String>
     private lateinit var mDragList: DragListView
     private lateinit var ideaArray: ArrayList<Pair<Long,String>>
 
@@ -61,14 +64,24 @@ class MainIdeasActivity : AppCompatActivity() {
                      * The order will be the "Priority" order
                      * All strings will be of the form "Idea Name"-"Idea ID"
                      */
-                    println(mDragList.adapter.itemList.toString())
+                    //println(mDragList.adapter.itemList.toString())
                     Toast.makeText(applicationContext, "End - position: $toPosition", Toast.LENGTH_SHORT).show()
+
+                    val list:ArrayList<Pair<Long,String>> = mDragList.adapter.itemList as ArrayList<Pair<Long,String>>
+                    val newList:ArrayList<String> = arrayListOf()
+                    for (item in list) {
+//                        setPriority(item.second.toString()
+//                                .substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
+                        newList.add(item.second.toString().substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
+                    }
+                    setPriority(newList)
                 }
             }
         })
 
         ideaArray = ArrayList()
-        getIdeas(::userIdeaKeys)
+        getIdeasByPriority(::getIdeaPriority)
+
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { view ->
@@ -79,20 +92,69 @@ class MainIdeasActivity : AppCompatActivity() {
 
     }
 
+    fun getIdeaPriority(keys: ArrayList<String>){
+        if(!keys.isEmpty()) {
+            ideaByPrio = keys
+            println(ideaByPrio.toString())
+        }
+        getIdeas(::userIdeaKeys)
+    }
+
     fun userIdeaKeys(keys: ArrayList<String>){
-        count = keys.size.toLong()
-        println(count)
-        for(id in keys){
-            getIdeasByID(id,::addToIdeaList)
+        ideaInfoList = LinkedHashMap()
+        if(keys.isEmpty() || keys.size<=0)
+            return
+
+        //count = keys.size.toLong()
+        for(i in ideaByPrio){
+            if(keys.contains(i))
+                keys.remove(i)
+        }
+
+        println("KEYS" + keys.toString())
+
+        if(keys.size > 0) {
+            for(key in keys)
+                ideaInfoList.put(key,"")
+            for(key in ideaByPrio)
+                ideaInfoList.put(key,"")
+
+            count = (keys.size + ideaByPrio.size).toLong()
+            for (id in keys) {
+
+                getIdeasByID(id, ::addToIdeaList)
+            }
+            for(id in ideaByPrio){
+                getIdeasByID(id,::addToIdeaList)
+            }
+        }
+        else{
+            for(key in ideaByPrio)
+                ideaInfoList.put(key,"")
+            count = ideaByPrio.size.toLong()
+            for(id in ideaByPrio){
+                println(id)
+                getIdeasByID(id,::addToIdeaList)
+            }
         }
 
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     fun addToIdeaList(ideaInfo : String){
-        ideaArray.add(Pair(count,ideaInfo))
-        println(ideaArray.toString())
-        if(count --> 0){
+        val ideaVals = ideaInfo.split("-")
+        ideaInfoList.replace(ideaVals[1],ideaVals[0])
+        count--
+        if(count == 0.toLong()){
+            println(ideaInfoList.toString())
+            var counter = 0
+            for(i in ideaInfoList.entries){
+                val title = i.value+"-"+i.key
+                ideaArray.add(Pair(counter.toLong(),title))
+                counter++
+            }
+
             mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
             val listAdapter = IdeaItemAdapter(ideaArray,R.layout.idea_item,true)
             mDragList.setAdapter(listAdapter,false)

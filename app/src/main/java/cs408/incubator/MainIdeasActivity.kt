@@ -56,6 +56,11 @@ class MainIdeasActivity : AppCompatActivity() {
 
             override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
                 if (fromPosition != toPosition) {
+                    /**
+                     * This will get you a list of Pair(Long, String).
+                     * The order will be the "Priority" order
+                     * All strings will be of the form "Idea Name"-"Idea ID"
+                     */
                     println(mDragList.adapter.itemList.toString())
                     Toast.makeText(applicationContext, "End - position: $toPosition", Toast.LENGTH_SHORT).show()
                 }
@@ -70,7 +75,6 @@ class MainIdeasActivity : AppCompatActivity() {
             val intent = Intent(this,AddIdeaActivity::class.java)
             startActivityForResult(intent,REQ_CODE)
         }
-
 
 
     }

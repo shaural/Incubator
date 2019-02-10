@@ -160,7 +160,6 @@ class MainIdeasActivity : AppCompatActivity() {
         println("In callback")
         println(skeys.toString())
 
-
     }
 
 }

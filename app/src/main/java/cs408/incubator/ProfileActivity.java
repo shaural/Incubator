@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,7 +158,8 @@ public class ProfileActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 if (user != null && !newName.getText().toString().trim().equals("")) {
                     _User.put("name", newName.getText().toString().trim());
-                    db.collection("Users").document(email).update(_User)
+                    _User.put("email", email);
+                    db.collection("Users").document(email).set(_User, SetOptions.merge())
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

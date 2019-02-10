@@ -18,11 +18,14 @@ import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
 import kotlinx.android.synthetic.main.activity_main_ideas.*
 import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import com.woxthebox.draglistview.DragItem
 import com.woxthebox.draglistview.DragItemAdapter
 import firestore_library.addUser
 import firestore_library.getIdeas
 import firestore_library.getIdeasByID
+import firestore_library.setPriority
+import java.io.File
 
 
 class MainIdeasActivity : AppCompatActivity() {
@@ -63,6 +66,15 @@ class MainIdeasActivity : AppCompatActivity() {
                      */
                     println(mDragList.adapter.itemList.toString())
                     Toast.makeText(applicationContext, "End - position: $toPosition", Toast.LENGTH_SHORT).show()
+
+                    val list:ArrayList<Pair<Long,String>> = mDragList.adapter.itemList as ArrayList<Pair<Long,String>>
+                    val newList:ArrayList<String> = arrayListOf()
+                    for (item in list) {
+//                        setPriority(item.second.toString()
+//                                .substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
+                        newList.add(item.second.toString().substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
+                    }
+                    setPriority(newList)
                 }
             }
         })

@@ -31,6 +31,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /** Remove below line. It skips auth -- for testing
+         *
+         */
+        Intent intent = new Intent(this,MainIdeasActivity.class);
+        startActivity(intent);
+        finish();
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

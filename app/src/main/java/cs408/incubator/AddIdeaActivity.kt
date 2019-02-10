@@ -1,19 +1,19 @@
 package cs408.incubator
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import firestore_library.addIdea
+import firestore_library.verifyUsers
 import kotlinx.android.synthetic.main.activity_add_idea.*
 
 class AddIdeaActivity : AppCompatActivity() {
+
+    private var verification:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,23 +42,77 @@ class AddIdeaActivity : AppCompatActivity() {
         finish()
     }
 
+    fun verifyFields() {
+        val title = findViewById<EditText>(R.id.addTitle).text.toString()
+        val collabs = findViewById<EditText>(R.id.addCollab).text.toString()
+
+        if(title.isBlank()){
+            Toast.makeText(applicationContext,"Idea Title Cannot be Blank",Toast.LENGTH_SHORT).show()
+            verification = false
+            return
+        }
+        else if(title.length > 150){
+            Toast.makeText(applicationContext,"Idea Title too Long. [150 character Limit]",Toast.LENGTH_SHORT).show()
+            verification = false
+            return
+        }
+        else if(collabs.isNotEmpty()){
+            if(!verifyEmail(collabs)) {
+                Toast.makeText(applicationContext,"Invalid collaborator Email", Toast.LENGTH_SHORT).show()
+                verification = false
+            }
+            else
+                verifyUsers(collabs,::verifyUserExists)
+        }
+        else
+            verification = true
+
+
+    }
+
+    fun verifyEmail(emails : String):Boolean{
+        if(emails.contains(",")){
+            val emailList = emails.split(",")
+            for(mail in emailList){
+                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(mail.trim()).matches())
+                    return false
+            }
+            return true
+        }
+        else
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()
+    }
+
+    fun verifyUserExists(bool : Boolean) {
+        if(!bool){
+            Toast.makeText(applicationContext,"User Not Found",Toast.LENGTH_SHORT).show()
+            return
+        }
+        verification = true
+
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item != null) {
             return when(item.itemId){
                 R.id.confirm -> {
-                    //TODO --> Testing for all current components of Idea
 
-                    val idea = Idea()
-                    idea.setTitle(findViewById<EditText>(R.id.addTitle).text.toString())
-                    idea.setDesc(findViewById<EditText>(R.id.addDesc).text.toString())
-                    idea.setCollaborators(findViewById<EditText>(R.id.addCollab).text.toString())
-                    idea.setTags(findViewById<EditText>(R.id.addTag).text.toString())
+                    verifyFields()
+                    if(verification) {
 
-                    Toast.makeText(applicationContext,idea.getTitle(),Toast.LENGTH_SHORT).show()
+                        val idea = Idea()
+                        idea.setTitle(findViewById<EditText>(R.id.addTitle).text.toString())
+                        idea.setDesc(findViewById<EditText>(R.id.addDesc).text.toString())
+                        idea.setCollaborators(findViewById<EditText>(R.id.addCollab).text.toString())
+                        idea.setTags(findViewById<EditText>(R.id.addTag).text.toString())
 
-                    addIdea(idea,::returnIdea)
+                        Toast.makeText(applicationContext, idea.getTitle(), Toast.LENGTH_SHORT).show()
+                        addIdea(idea, ::returnIdea)
 
-                    true
+                        true
+                    }
+                    else
+                        true
                 }
                 android.R.id.home -> {
                     val intent = Intent(this,MainIdeasActivity::class.java)

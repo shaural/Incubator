@@ -1,11 +1,11 @@
 package firestore_library
 
-import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import cs408.incubator.Idea
+import kotlin.reflect.KFunction1
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
@@ -68,6 +68,32 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
                 println("Failed to find Idea with $key")
             }
 
+}
+
+fun verifyUsers(emails: String, callback: (Boolean) -> Unit) {
+    val users = ArrayList<String>()
+    if(emails.contains(",")){
+        val m = emails.split(",")
+        for(mail in m)
+            users.add(mail.trim())
+    }
+    else
+        users.add(emails)
+
+    for(user in users){
+        getDB().collection("Users").document(user).get()
+                .addOnSuccessListener {
+                    if(!it.exists()) {
+                        println("No exist")
+                        callback(false)
+                    }
+
+                }
+                .addOnFailureListener {
+                    println("Fail!")
+                }
+    }
+    callback(true)
 }
 
 fun addUser() {

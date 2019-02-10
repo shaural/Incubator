@@ -149,7 +149,6 @@ class ItemActivity : AppCompatActivity() {
     class ItemAdapter(val activity: ItemActivity, val list: MutableList<ToDoItem>) :
             RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
-        val clist = ArrayList<String>()
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
             return ViewHolder(
                     LayoutInflater.from(activity).inflate(
@@ -183,12 +182,10 @@ class ItemActivity : AppCompatActivity() {
                 //add to completed task firebase
                 list[p1].isCompleted = !list[p1].isCompleted
                 val dbc = FirebaseFirestore.getInstance()
-                val docRefc = dbc.collection("Ideas").document(stringc)
+                val docRefc = dbc.collection("Ideas").document(string)
                 docRefc.update("ctasks", FieldValue.arrayUnion(list[p1].itemName))
                 //add to clist for ui
 
-                clist.add(list[p1].itemName)
-                val listView = ListView(activity);
                 //remove from the firebase task list
                 activity.dbHandler.updateToDoItem(list[p1])
                 val db = FirebaseFirestore.getInstance()
@@ -248,24 +245,38 @@ class ItemActivity : AppCompatActivity() {
     fun readTasks() {
         var tasks = ArrayList<String>()
         var taskList = ArrayList<ToDoItem>()
+        var compTasks = ArrayList<String>()
         val db = FirebaseFirestore.getInstance()
         val docRef = db.collection("Ideas").document(string)
         docRef.get().addOnSuccessListener {
-            tasks = it["Tasks"] as ArrayList<String>
-            println("Got the tasks")
-            for(task in tasks){
-                val item = ToDoItem()
-                item.itemName = task
-                item.isCompleted = false
-                item.toDoId = todoId
-                taskList.add(item)
+            if(it["Tasks"] != null) {
+                findViewById<TextView>(R.id.pending).visibility = View.VISIBLE
+                tasks = it["Tasks"] as ArrayList<String>
+                println("Got the tasks " + tasks.toString())
+                for (task in tasks) {
+                    val item = ToDoItem()
+                    item.itemName = task
+                    item.isCompleted = false
+                    item.toDoId = todoId
+                    taskList.add(item)
+                }
+            }
+
+            if(it["ctasks"]!=null){
+                findViewById<LinearLayout>(R.id.rv2_item).visibility = View.VISIBLE
+                var string = ""
+                compTasks = it["ctasks"] as ArrayList<String>
+                for(task in compTasks){
+                    string += task+"\n"
+                }
+
+                findViewById<TextView>(R.id.compTasks).text = string
             }
 
             list = taskList
             adapter = ItemAdapter(this, list!!)
             rv_item.adapter = adapter
         }
-
     }
 
 }

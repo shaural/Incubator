@@ -56,6 +56,7 @@ class MainIdeasActivity : AppCompatActivity() {
 
             override fun onItemDragEnded(fromPosition: Int, toPosition: Int) {
                 if (fromPosition != toPosition) {
+                    println(mDragList.adapter.itemList.toString())
                     Toast.makeText(applicationContext, "End - position: $toPosition", Toast.LENGTH_SHORT).show()
                 }
             }

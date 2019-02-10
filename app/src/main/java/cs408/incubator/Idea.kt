@@ -38,7 +38,8 @@ class Idea {
                 val users = collab.split(",")
                 for(u in users){
                     val user = u.trim()
-                    collaborators.add(user)
+                    if(!collaborators.contains(user))
+                        collaborators.add(user)
                 }
             }
             else

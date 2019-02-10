@@ -18,20 +18,26 @@ fun addIdea(idea : Idea, callback: (String)->Unit) {
     map.put("Description",idea.getDesc())
     map.put("Collaborators",idea.getCollaborators())
     map.put("Tags",idea.getTags())
+
+    val ideaCollabs = idea.getCollaborators()
+    ideaCollabs.add(USERNAME)
+
     var ideaRef = ""
     getDB().collection("Ideas").add(map)
             .addOnSuccessListener {
                 ideaRef = it.id
                 println("Success" + it.id )
 
-                getDB().collection("Users").document(USERNAME)
-                        .update("Ideas_Owned",FieldValue.arrayUnion(ideaRef))
-                        .addOnSuccessListener {
-                            println("Added ID to User")
-                        }
-                        .addOnFailureListener {
-                            println("Fail! ID not added to User")
-                        }
+                for(user in ideaCollabs) {
+                    getDB().collection("Users").document(user)
+                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef))
+                            .addOnSuccessListener {
+                                println("Added ID to $user")
+                            }
+                            .addOnFailureListener {
+                                println("Fail! ID not added to User")
+                            }
+                }
 
                 callback(ideaRef)
             }

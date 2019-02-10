@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.content.Intent
+import android.provider.Settings.Global.getString
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_item.*
 import java.util.*
 
 
-import cs408.incubator.DTO.DBHandler
+//import cs408.incubator.DTO.DBHandler
 import cs408.incubator.DTO.INTENT_TODO_ID
 import cs408.incubator.DTO.INTENT_TODO_NAME
 import cs408.incubator.DTO.ToDoItem
@@ -30,7 +31,7 @@ val string = "f89JEFF2SHcnjnv81pDG"
 val stringc = "rzWkG55B8gES2odXt94H"
 class ItemActivity : AppCompatActivity() {
 
-    lateinit var dbHandler: DBHandler
+    //lateinit var dbHandler: DBHandler
     var todoId: Long = -1
     var list: MutableList<ToDoItem>? = null
     //val clist = arrayListOf<String>()
@@ -38,7 +39,7 @@ class ItemActivity : AppCompatActivity() {
     var touchHelper : ItemTouchHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //var db = FirebaseFirestore.getInstance()
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_item)
@@ -48,7 +49,7 @@ class ItemActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.title = intent.getStringExtra(INTENT_TODO_NAME)
         todoId = intent.getLongExtra(INTENT_TODO_ID, -1)
-        dbHandler = DBHandler(this)
+        //dbHandler = DBHandler(this)
 
         rv_item.layoutManager = LinearLayoutManager(this)
 
@@ -71,7 +72,7 @@ class ItemActivity : AppCompatActivity() {
                     docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
                     item.toDoId = todoId
                     item.isCompleted = false
-                    dbHandler.addToDoItem(item)
+                   // dbHandler.addToDoItem(item)
                     readTasks()
                 }
             }
@@ -125,7 +126,7 @@ class ItemActivity : AppCompatActivity() {
                 docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
                 item.toDoId = todoId
                 item.isCompleted = false
-                dbHandler.updateToDoItem(item)
+                //dbHandler.updateToDoItem(item)
                 readTasks()
             }
         }
@@ -188,9 +189,6 @@ class ItemActivity : AppCompatActivity() {
                 //add to clist for ui
 
                 clist.add(list[p1].itemName)
-                val listView = ListView(activity);
-                //remove from the firebase task list
-                activity.dbHandler.updateToDoItem(list[p1])
                 val db = FirebaseFirestore.getInstance()
                 val docRef = db.collection("Ideas").document(string)
                 docRef.update("Tasks", FieldValue.arrayRemove(list[p1].itemName))
@@ -201,16 +199,16 @@ class ItemActivity : AppCompatActivity() {
                 dialog.setTitle("Are you sure")
                 dialog.setMessage("Do you want to delete this item ?")
                 dialog.setPositiveButton("Continue") { _: DialogInterface, _: Int ->
-                    activity.dbHandler.deleteToDoItem(list[p1].id)
                     //remove
                     val db = FirebaseFirestore.getInstance()
                     val docRef = db.collection("Ideas").document(string)
-                    Toast.makeText(activity,list[p1].itemName.toString(),Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity,list[p1].itemName,Toast.LENGTH_SHORT).show()
                     docRef.update("Tasks", FieldValue.arrayRemove(list[p1].itemName))
                             .addOnSuccessListener {
                                 Toast.makeText(activity,"Removed",Toast.LENGTH_SHORT).show()
                             }
                     activity.readTasks()
+
                 }
                 dialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
 
@@ -221,19 +219,12 @@ class ItemActivity : AppCompatActivity() {
                 activity.updateItem(list[p1])
             }
 
-            holder.move.setOnTouchListener { v, event ->
-                if(event.actionMasked== MotionEvent.ACTION_DOWN){
-                    activity.touchHelper?.startDrag(holder)
-                }
-                false
-            }
         }
 
         class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
             val itemName: CheckBox = v.findViewById(R.id.cb_item)
             val edit: ImageView = v.findViewById(R.id.iv_edit)
             val delete: ImageView = v.findViewById(R.id.iv_delete)
-            val move: ImageView = v.findViewById(R.id.iv_move)
         }
     }
 

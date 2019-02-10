@@ -22,15 +22,17 @@
             android:layout_height="match_parent"/>
 
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_below="@+id/item_toolbar"
+    <android.support.v7.widget.AppCompatCheckedTextView
         android:id="@+id/rv2_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/item_toolbar"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="0dp" android:layout_marginLeft="0dp" android:layout_marginTop="350dp"/>
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginBottom="0dp" />
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_item"

@@ -10,7 +10,7 @@
         android:id="@+id/et_tag"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="Enter Tag here..."
+        android:hint="Enter new Tag here..."
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -199,32 +199,35 @@ class MainIdeasActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search_idea, menu)
         val searchItem = menu?.findItem(R.id.search_idea)
-        searchItem?.expandActionView()
+        searchItem?.setOnMenuItemClickListener {
+            searchItem.expandActionView()
+        }
 
         if (searchItem != null) {
-            val searchView = searchItem.actionView as SearchView
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    // when enter/search is pressed display matched results
-                    getSearch(query.toString(),::searchKeys)
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-//                  Do nothing while typing
-                    return false
-                }
-            })
 
             searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
 
                 override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+                    val searchView = searchItem.actionView as SearchView
+
+                    searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                        override fun onQueryTextSubmit(query: String?): Boolean {
+                            // when enter/search is pressed display matched results
+                            getSearch(query.toString(),::searchKeys)
+                            return false
+                        }
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+//                  Do nothing while typing
+                            return false
+                        }
+                    })
+
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                    Toast.makeText(applicationContext, "Back", Toast.LENGTH_SHORT).show()
 
                     val layout = findViewById<LinearLayout>(R.id.linList)
                     layout.removeAllViews()

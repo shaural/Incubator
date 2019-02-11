@@ -104,7 +104,13 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
+                                    boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                                    Intent intent;
+                                    if(isNew) {
+                                        intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                                    } else {
+                                        intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
+                                    }
                                     startActivity(intent);
                                     finish();
                                 }

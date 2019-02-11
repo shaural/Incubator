@@ -24,6 +24,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -156,7 +157,9 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                if (user != null && !newName.getText().toString().trim().equals("")) {
+                String _name = newName.getText().toString().trim();
+                if (user != null && !_name.equals("")
+                        && !(_name.length() > 70) && engPattern(_name)) {
                     _User.put("name", newName.getText().toString().trim());
                     _User.put("email", email);
                     db.collection("Users").document(email).set(_User, SetOptions.merge())
@@ -178,7 +181,14 @@ public class ProfileActivity extends AppCompatActivity {
                 } else if (newName.getText().toString().trim().equals("")) {
                     newName.setError("Enter Name");
                     progressBar.setVisibility(View.GONE);
+                } else if ((newName.getText().toString().length() > 70)) {
+                    newName.setError("Name is too long");
+                    progressBar.setVisibility(View.GONE);
+                } else if (!engPattern(_name)) {
+                    newName.setError("Invalid Characters included");
+                    progressBar.setVisibility(View.GONE);
                 }
+
             }
         });
 
@@ -329,5 +339,12 @@ public class ProfileActivity extends AppCompatActivity {
         if (authListener != null) {
             auth.removeAuthStateListener(authListener);
         }
+    }
+
+    public boolean engPattern ( String str) {
+        String pattern = "^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$";
+        String input = str;
+
+        return Pattern.matches(pattern, input);
     }
 }

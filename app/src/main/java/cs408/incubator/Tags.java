@@ -45,73 +45,78 @@ String idea_id = "irWRcr2YIjDxi2kgEn93";
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 DocumentSnapshot document = task.getResult();
-                final List<String> tag_list = (List<String>)document.get("Tags");
-                ListView lv_tags = (ListView)findViewById(R.id.lv_tags);
-                ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(), R.layout.layout_list_tag, tag_list);
-                lv_tags.setAdapter( aa );
-                // register onClickListener to handle click events on each item
-                lv_tags.setOnItemClickListener(new AdapterView.OnItemClickListener()
-                {
-                    // argument position gives the index of item which is clicked
-                    public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
-                    {
-                        final String selected_tag = tag_list.get(position);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
-                        builder.setTitle("Update Tag");
+                if(document.get("Tags") != null) {
+                    final List<String> tag_list = (List<String>) document.get("Tags");
 
-                        final EditText input = new EditText(Tags.this);
-                        input.setText(selected_tag);
-                        input.setInputType(InputType.TYPE_CLASS_TEXT);
-                        builder.setView(input);
+                if(tag_list.size() == 0) {
+                    // no tags
+                } else {
+                    ListView lv_tags = (ListView) findViewById(R.id.lv_tags);
+                    ArrayAdapter<String> aa = new ArrayAdapter<String>(getApplicationContext(), R.layout.layout_list_tag, tag_list);
+                    lv_tags.setAdapter(aa);
+                    // register onClickListener to handle click events on each item
+                    lv_tags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        // argument position gives the index of item which is clicked
+                        public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
+                            final String selected_tag = tag_list.get(position);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
+                            builder.setTitle("Update Tag");
 
-                        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String m_Text = input.getText().toString();
+                            final EditText input = new EditText(Tags.this);
+                            input.setText(selected_tag);
+                            input.setInputType(InputType.TYPE_CLASS_TEXT);
+                            builder.setView(input);
 
-                                docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
-                                docRef.update("Tags", FieldValue.arrayUnion(m_Text));
-                                finish();
-                                startActivity(getIntent());
-                            }
-                        });
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
+                            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String m_Text = input.getText().toString();
 
-                        builder.show();
-                    }
-                });
-                lv_tags.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                                   int pos, long id) {
-                        final String selected_tag = tag_list.get(pos);
-                        final DocumentReference docRef = db.collection("Ideas").document(idea_id);
-                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int choice) {
-                                switch (choice) {
-                                    case DialogInterface.BUTTON_POSITIVE:
-                                        docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
-                                        finish();
-                                        startActivity(getIntent());
-                                        break;
-                                    case DialogInterface.BUTTON_NEGATIVE:
-                                        break;
+                                    docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
+                                    docRef.update("Tags", FieldValue.arrayUnion(m_Text));
+                                    finish();
+                                    startActivity(getIntent());
                                 }
-                            }
-                        };
-                        AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
-                        builder.setMessage("Delete this Tag?")
-                                .setPositiveButton("Yes", dialogClickListener)
-                                .setNegativeButton("No", dialogClickListener).show();
-                        return true;
-                    }
-                });
+                            });
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            builder.show();
+                        }
+                    });
+                    lv_tags.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                                       int pos, long id) {
+                            final String selected_tag = tag_list.get(pos);
+                            final DocumentReference docRef = db.collection("Ideas").document(idea_id);
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int choice) {
+                                    switch (choice) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
+                                            finish();
+                                            startActivity(getIntent());
+                                            break;
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            break;
+                                    }
+                                }
+                            };
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Tags.this);
+                            builder.setMessage("Delete this Tag?")
+                                    .setPositiveButton("Yes", dialogClickListener)
+                                    .setNegativeButton("No", dialogClickListener).show();
+                            return true;
+                        }
+                    });
+                }
+                }
             }
         });
 

@@ -52,7 +52,6 @@
             android:name=".SignUpActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
-
         </activity>
 
         <activity

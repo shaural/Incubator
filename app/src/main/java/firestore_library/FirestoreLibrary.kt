@@ -2,7 +2,9 @@ package firestore_library
 
 import com.google.firebase.firestore.*
 import cs408.incubator.Idea
+import java.text.SimpleDateFormat
 import kotlin.reflect.KFunction1
+import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
@@ -15,6 +17,15 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
     map.put("Description", idea.getDesc())
     map.put("Collaborators", idea.getCollaborators())
     map.put("Tags", idea.getTags())
+    map.put("Owner", USERNAME)
+
+    // log
+    var log_al = ArrayList<String>()
+    var date_format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    var time = Calendar.getInstance().time
+    var str_log = date_format.format(time).toString() + "-" + USERNAME + "-create-idea-" + idea.getTitle()
+    log_al.add(str_log)
+    map.put("Log", log_al)
 
     val ideaCollabs = idea.getCollaborators()
     ideaCollabs.add(USERNAME)

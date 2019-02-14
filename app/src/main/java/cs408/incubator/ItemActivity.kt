@@ -27,8 +27,9 @@ import kotlinx.android.synthetic.main.activity_item.*
 import kotlin.collections.ArrayList
 
 
-val string = "f89JEFF2SHcnjnv81pDG"
-val stringc = "rzWkG55B8gES2odXt94H"
+val IDEA_ID = "f89JEFF2SHcnjnv81pDG"
+val USERNAME = "yugdassani"
+
 class ItemActivity : AppCompatActivity() {
 
     var todoId: Long = -1
@@ -65,8 +66,9 @@ class ItemActivity : AppCompatActivity() {
                     //add to firebase
                     // Access a Cloud Firestore instance from your Activity
                     val db = FirebaseFirestore.getInstance()
-                    val docRef = db.collection("Ideas").document(string)
+                    val docRef = db.collection("Ideas").document(IDEA_ID)
                     docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
+                    docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "add", "task", toDoName.text.toString())))
                     item.toDoId = todoId
                     item.isCompleted = false
                    // dbHandler.addToDoItem(item)
@@ -110,7 +112,7 @@ class ItemActivity : AppCompatActivity() {
         val toDoName = view.findViewById<EditText>(R.id.ev_todo)
         toDoName.setText(item.itemName)
         val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("Ideas").document(string)
+        val docRef = db.collection("Ideas").document(IDEA_ID)
         docRef.update("Tasks", FieldValue.arrayRemove(item.itemName))
         dialog.setView(view)
         dialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
@@ -118,9 +120,10 @@ class ItemActivity : AppCompatActivity() {
 
                 item.itemName = toDoName.text.toString()
                 //add new item
-                val db = FirebaseFirestore.getInstance()
-                val docRef = db.collection("Ideas").document(string)
                 docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
+                var str_log = item.itemName + "_to_" + toDoName.text.toString()
+                docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "update", "task", str_log)))
+
                 item.toDoId = todoId
                 item.isCompleted = false
                 //dbHandler.updateToDoItem(item)
@@ -175,8 +178,10 @@ class ItemActivity : AppCompatActivity() {
                 //add to completed task firebase
                 list[p1].isCompleted = !list[p1].isCompleted
                 val dbc = FirebaseFirestore.getInstance()
-                val docRefc = dbc.collection("Ideas").document(string)
+                val docRefc = dbc.collection("Ideas").document(IDEA_ID)
                 docRefc.update("ctasks", FieldValue.arrayUnion(list[p1].itemName))
+                docRefc.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "check", "task", list[p1].itemName)))
+
                 //add to clist for ui
 
 
@@ -185,7 +190,7 @@ class ItemActivity : AppCompatActivity() {
                 //remove from the firebase task list
                 //activity.dbHandler.updateToDoItem(list[p1])
                 val db = FirebaseFirestore.getInstance()
-                val docRef = db.collection("Ideas").document(string)
+                val docRef = db.collection("Ideas").document(IDEA_ID)
                 docRef.update("Tasks", FieldValue.arrayRemove(list[p1].itemName))
                 activity.readTasks()
             }
@@ -196,10 +201,12 @@ class ItemActivity : AppCompatActivity() {
                 dialog.setPositiveButton("Continue") { _: DialogInterface, _: Int ->
                     //remove
                     val db = FirebaseFirestore.getInstance()
-                    val docRef = db.collection("Ideas").document(string)
+                    val docRef = db.collection("Ideas").document(IDEA_ID)
                     Toast.makeText(activity,list[p1].itemName,Toast.LENGTH_SHORT).show()
                     docRef.update("Tasks", FieldValue.arrayRemove(list[p1].itemName))
                             .addOnSuccessListener {
+                                docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "delete", "task", list[p1].itemName)))
+
                                 Toast.makeText(activity,"Removed",Toast.LENGTH_SHORT).show()
                             }
                     activity.readTasks()
@@ -236,7 +243,7 @@ class ItemActivity : AppCompatActivity() {
         var taskList = ArrayList<ToDoItem>()
         var compTasks = ArrayList<String>()
         val db = FirebaseFirestore.getInstance()
-        val docRef = db.collection("Ideas").document(string)
+        val docRef = db.collection("Ideas").document(IDEA_ID)
         docRef.get().addOnSuccessListener {
             if(it["Tasks"] != null) {
                 findViewById<TextView>(R.id.pending).visibility = View.VISIBLE

@@ -25,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.List;
+
 
 public class IdeaDetailsActivity extends AppCompatActivity {
 
@@ -43,9 +45,9 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        descTV = findViewById(R.id.descriptionText1);
+        //descTV = findViewById(R.id.descriptionText1);
         //stDesc = getIntent().getExtras().getString("Desc");
-        descTV.setText("test");
+        //descTV.setText("test");
 
         Intent i = getIntent();
         String ideaTag = i.getStringExtra("ideaTag");

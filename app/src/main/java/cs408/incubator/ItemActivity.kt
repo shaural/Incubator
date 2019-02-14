@@ -138,11 +138,6 @@ class ItemActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    /**private fun refreshList() {
-        list = dbHandler.getToDoItems(todoId)
-        adapter = ItemAdapter(this, list!!)
-        rv_item.adapter = adapter
-    }*/
 
     class ItemAdapter(val activity: ItemActivity, val list: MutableList<ToDoItem>) :
             RecyclerView.Adapter<ItemAdapter.ViewHolder>() {

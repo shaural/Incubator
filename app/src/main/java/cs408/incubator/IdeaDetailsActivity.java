@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,6 +30,7 @@ import java.util.List;
 
 
 public class IdeaDetailsActivity extends AppCompatActivity {
+    String USERNAME = "yugdassani";
 
     EditText descTV;
     String tag;
@@ -85,15 +87,17 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         EditText et_desc = (EditText)findViewById(R.id.descriptionText1);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("Ideas").document(tag);
+        final DocumentReference docRef = db.collection("Ideas").document(tag);
 
 
         if (findViewById(R.id.descriptionText1).isEnabled()) {
+            final String update_desc = et_desc.getText().toString();
             docRef
                     .update("Description", et_desc.getText().toString())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "description", update_desc)));
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

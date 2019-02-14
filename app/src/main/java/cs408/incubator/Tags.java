@@ -75,8 +75,7 @@ String USERNAME = "yugdassani";
 
                                     docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
                                     docRef.update("Tags", FieldValue.arrayUnion(m_Text));
-                                    String str_log = selected_tag + "_to_" + m_Text;
-                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", str_log)));
+                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", m_Text)));
                                     finish();
                                     startActivity(getIntent());
                                 }

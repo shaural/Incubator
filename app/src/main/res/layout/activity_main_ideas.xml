@@ -6,21 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".MainIdeasActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/linList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/ideaList"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent">
 
-    </android.support.design.widget.AppBarLayout>
+        </com.woxthebox.draglistview.DragListView>
 
-    <include layout="@layout/content_main_ideas" />
+    </LinearLayout>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -28,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_add"/>
 
 </android.support.design.widget.CoordinatorLayout>

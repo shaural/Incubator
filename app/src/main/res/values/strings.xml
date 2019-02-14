@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Incubator</string>
-    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_login">Incubator</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -12,9 +12,17 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="title_activity_profile">ProfileActivity</string>
-    <string name="title_activity_main_ideas">MainIdeasActivity</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_main_ideas">Incubator</string>
     <string name="title_activity_idea_details">IdeaDetailsActivity</string>
+    <string name="title_activity_add_idea">Add Idea</string>
+
+    <!-- Strings for adding idea -->
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="collab">Add Collaborators</string>
+    <string name="tags">Add Tags</string>
+
     <string name="title_activity_login2">Sign in</string>
     <string name="action_sign_in_short">Register</string>
     <string name="email">Email</string>

@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class Tags extends AppCompatActivity {
 String idea_id = "irWRcr2YIjDxi2kgEn93";
+String USERNAME = "yugdassani";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,8 @@ String idea_id = "irWRcr2YIjDxi2kgEn93";
 
                                     docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
                                     docRef.update("Tags", FieldValue.arrayUnion(m_Text));
+                                    String str_log = selected_tag + "_to_" + m_Text;
+                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", str_log)));
                                     finish();
                                     startActivity(getIntent());
                                 }
@@ -100,6 +103,7 @@ String idea_id = "irWRcr2YIjDxi2kgEn93";
                                     switch (choice) {
                                         case DialogInterface.BUTTON_POSITIVE:
                                             docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
+                                            docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "delete", "tag", selected_tag)));
                                             finish();
                                             startActivity(getIntent());
                                             break;
@@ -130,8 +134,8 @@ String idea_id = "irWRcr2YIjDxi2kgEn93";
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("Ideas").document(idea_id);
-        // Atomically add a new region to the "regions" array field.
-        docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString()));
+        docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString().trim()));
+        docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "add", "tag", et_tag.getText().toString().trim())));
         Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();
         finish();
         startActivity(getIntent());

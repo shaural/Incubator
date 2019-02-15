@@ -1,23 +1,25 @@
 package cs408.incubator
 
+import android.app.Activity
 import android.support.design.widget.FloatingActionButton
 import android.support.test.espresso.Espresso
 import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import firestore_library.updateUserName
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
-import org.junit.Rule
-import org.junit.Test
-import org.junit.Before
-
+import org.junit.*
 
 
 class AddIdeaActivityInstrumentationTest {
 
     @get:Rule
     public val rule = ActivityTestRule<AddIdeaActivity>(AddIdeaActivity::class.java)
+
+    @get:Rule
+    val rule2 = ActivityTestRule<MainIdeasActivity>(MainIdeasActivity::class.java)
 
 
 
@@ -28,6 +30,7 @@ class AddIdeaActivityInstrumentationTest {
     fun setUp() {
         updateUserName("newus@gmail.com")
         addIdeaActivity = rule.activity
+        mainIdeasActivity = rule2.activity
     }
 
 
@@ -66,7 +69,7 @@ class AddIdeaActivityInstrumentationTest {
         assertEquals(verify,false)
     }
 
-    @Test
+    /**@Test
     fun check_nonexisting_user() {
         val title = "Check_Invalid_collaborator"
         val email = "notexisting@gmail.com"
@@ -82,6 +85,27 @@ class AddIdeaActivityInstrumentationTest {
 
         val verify = addIdeaActivity.verification
         assertEquals(verify,false)
+    }*/
+
+    @Test
+    fun sucessful_add_idea() {
+        val title = "Successful_add_idea"
+        val tags = "Testing"
+
+        Espresso.onView((withId(R.id.addTitle)))
+                .perform(ViewActions.typeText(title))
+
+        Espresso.onView((withId(R.id.addTag)))
+                .perform(ViewActions.typeText(tags))
+
+        Espresso.onView(withId(R.id.confirm))
+                .perform(ViewActions.click())
+
+
+        val verify = addIdeaActivity.verification
+        assertEquals(verify,true)
+        assert(addIdeaActivity.isFinishing)
+
     }
 
     @Test
@@ -101,8 +125,6 @@ class AddIdeaActivityInstrumentationTest {
         val verify = addIdeaActivity.verification
         println("no"+verify)
         assertEquals(verify,true)
-
-
 
     }
 

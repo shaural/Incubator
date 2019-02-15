@@ -9,7 +9,7 @@ import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
-var USERNAME = ""
+var USERNAME = "newus@gmail.com"
 
 fun updateUserName(name: String){
     USERNAME = name
@@ -39,14 +39,32 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
                 println("Success" + it.id)
 
                 for (user in ideaCollabs) {
+                    val priList = ArrayList<String>()
+                    priList.add(ideaRef)
                     getDB().collection("Users").document(user)
-                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef),"Priority",FieldValue.arrayUnion(ideaRef))
+                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef))
                             .addOnSuccessListener {
                                 println("Added ID to $user")
                             }
                             .addOnFailureListener {
                                 println("Fail! ID not added to User")
                             }
+                    getDB().collection("Users").document(user).get()
+                            .addOnSuccessListener {
+                                if(it["Priority"]!= null){
+                                    priList.addAll(it["Priority"] as Collection<String>)
+                                    getDB().collection("Users").document(user).update("Priority",priList)
+                                            .addOnSuccessListener {
+                                                println("Updated Priority")
+                                            }
+                                            .addOnFailureListener {
+                                                println("Fail!")
+                                            }
+                                }
+                            }
+
+
+
                 }
 
                 callback(ideaRef)

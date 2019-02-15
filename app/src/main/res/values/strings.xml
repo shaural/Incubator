@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Incubator</string>
+
     <string name="title_activity_login">Incubator</string>
-    <!-- Strings related to login -->
+
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -14,7 +15,7 @@
     </string>
     <string name="title_activity_profile">Profile</string>
     <string name="title_activity_main_ideas">Incubator</string>
-    <string name="title_activity_idea_details">IdeaDetailsActivity</string>
+    <string name="title_activity_idea_details">Idea Details</string>
     <string name="title_activity_add_idea">Add Idea</string>
 
     <!-- Strings for adding idea -->
@@ -31,7 +32,7 @@
     <string name="change_email">Change Email</string>
     <string name="change_password">Change Password</string>
     <string name="send_password_reset_email">Send Password reset email</string>
-    <string name="remove_user">Remove user</string>
+    <string name="remove_user">Delete Account</string>
     <string name="new_pass">New Password</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
@@ -49,7 +50,9 @@
     <string name="btn_remove">Remove</string>
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot password?</string>
+    <string name="SetName">Enter Display Name</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
-
+    <string name="welcome_msg1">Enter your Display Name to continue</string>
+    <string name="welcome_msg2">Welcome to Incubator!</string>
 
 </resources>

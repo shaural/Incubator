@@ -2,11 +2,18 @@ package firestore_library
 
 import com.google.firebase.firestore.*
 import cs408.incubator.Idea
+import cs408.incubator.genLogStr
+import java.text.SimpleDateFormat
 import kotlin.reflect.KFunction1
+import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
-val USERNAME = "ydassani"
+var USERNAME = ""
+
+fun updateUserName(name: String){
+    USERNAME = name
+}
 
 fun addIdea(idea: Idea, callback: (String) -> Unit) {
     val doc: CollectionReference = getDB().collection("Ideas")
@@ -15,6 +22,12 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
     map.put("Description", idea.getDesc())
     map.put("Collaborators", idea.getCollaborators())
     map.put("Tags", idea.getTags())
+    map.put("Owner", USERNAME)
+
+    // log
+    var log_al = ArrayList<String>()
+    log_al.add(genLogStr(USERNAME, "create", "idea", idea.getTitle()))
+    map.put("Log", log_al)
 
     val ideaCollabs = idea.getCollaborators()
     ideaCollabs.add(USERNAME)
@@ -27,7 +40,7 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
 
                 for (user in ideaCollabs) {
                     getDB().collection("Users").document(user)
-                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef))
+                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef),"Priority",FieldValue.arrayUnion(ideaRef))
                             .addOnSuccessListener {
                                 println("Added ID to $user")
                             }
@@ -114,6 +127,23 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
             .addOnFailureListener { exception ->
                 println("Error in search method...")
 //                Log.d(TAG, "Error getting documents: ", exception)
+            }
+}
+
+fun setUserDispName(disp : String, callback: (Boolean) -> Unit) {
+    val map = HashMap<String,Any>()
+    map.put("email", USERNAME)
+    map.put("name",disp)
+    map.put("Priority",ArrayList<String>())
+    map.put("Ideas_Owned",ArrayList<String>())
+
+    getDB().collection("Users").document(USERNAME).set(map)
+            .addOnSuccessListener {
+                println("Successfully set display name")
+                callback(true)
+            }
+            .addOnFailureListener {
+                println(USERNAME + "Fail!")
             }
 }
 

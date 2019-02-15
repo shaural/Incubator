@@ -1,16 +1,14 @@
 package cs408.incubator
 
-import android.app.PendingIntent.getActivity
-import android.content.ClipData
-import android.content.ClipDescription
+
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.ShadowDrawableWrapper
-import android.support.design.widget.Snackbar
+import android.support.design.widget.NavigationView
 import android.support.v4.util.Pair
+import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -20,11 +18,9 @@ import android.widget.LinearLayout
 import com.woxthebox.draglistview.DragListView
 import kotlinx.android.synthetic.main.activity_main_ideas.*
 import android.widget.Toast
-import com.google.firebase.firestore.FirebaseFirestore
-import com.woxthebox.draglistview.DragItem
-import com.woxthebox.draglistview.DragItemAdapter
 import firestore_library.*
 import android.support.v4.view.MenuItemCompat
+import android.support.v4.widget.DrawerLayout
 import android.view.MenuItem
 
 
@@ -37,6 +33,8 @@ class MainIdeasActivity : AppCompatActivity() {
     private lateinit var mDragList: DragListView
     private lateinit var ideaArray: ArrayList<Pair<Long,String>>
 
+    private lateinit var myDrawer: DrawerLayout
+
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +46,7 @@ class MainIdeasActivity : AppCompatActivity() {
             setHomeAsUpIndicator(R.drawable.ic_menu)
         }
 
-
+        myDrawer = findViewById(R.id.drawer_layout)
         mDragList = findViewById<DragListView>(R.id.ideaList)
 
         mDragList.setDragListListener(object : DragListView.DragListListener {
@@ -92,6 +90,18 @@ class MainIdeasActivity : AppCompatActivity() {
             startActivityForResult(intent,REQ_CODE)
         }
 
+        val nav = findViewById<NavigationView>(R.id.nav_view)
+        nav.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.profile -> {
+                    val intent = Intent(applicationContext,ProfileActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> true
+            }
+        }
+
 
     }
 
@@ -100,6 +110,9 @@ class MainIdeasActivity : AppCompatActivity() {
             ideaByPrio = keys
             println(ideaByPrio.toString())
         }
+        else
+            ideaByPrio = ArrayList()
+
         getIdeas(::userIdeaKeys)
     }
 
@@ -270,6 +283,17 @@ class MainIdeasActivity : AppCompatActivity() {
         val listAdapter = IdeaItemAdapter(tempSearch,R.layout.idea_item,true)
         dragList.setAdapter(listAdapter,false)
         dragList.setCanDragHorizontally(false)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId){
+            android.R.id.home ->{
+                myDrawer.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
 
     }
 

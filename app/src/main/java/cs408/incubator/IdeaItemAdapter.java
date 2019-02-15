@@ -2,12 +2,14 @@ package cs408.incubator;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Activity;
 
 import com.woxthebox.draglistview.DragItemAdapter;
 
@@ -56,7 +58,12 @@ class IdeaItemAdapter extends DragItemAdapter<Pair<Long, String>, IdeaItemAdapte
 
         @Override
         public void onItemClicked(View view) {
-            Toast.makeText(view.getContext(), mText.getText()+" "+ mText.getTag()+ " clicked", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), mText.getText()+" "+ mText.getTag()+ " clicked", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(view.getContext(), IdeaDetailsActivity.class);
+            i.putExtra("ideaTag", mText.getTag().toString());
+
+            view.getContext().startActivity(i);
+
         }
 
         @Override

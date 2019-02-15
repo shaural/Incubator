@@ -1,5 +1,8 @@
 package cs408.incubator
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 class Idea {
 
     private lateinit var ideaTitle: String

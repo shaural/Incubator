@@ -2,7 +2,10 @@ package firestore_library
 
 import com.google.firebase.firestore.*
 import cs408.incubator.Idea
+import cs408.incubator.genLogStr
+import java.text.SimpleDateFormat
 import kotlin.reflect.KFunction1
+import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
@@ -19,6 +22,12 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
     map.put("Description", idea.getDesc())
     map.put("Collaborators", idea.getCollaborators())
     map.put("Tags", idea.getTags())
+    map.put("Owner", USERNAME)
+
+    // log
+    var log_al = ArrayList<String>()
+    log_al.add(genLogStr(USERNAME, "create", "idea", idea.getTitle()))
+    map.put("Log", log_al)
 
     val ideaCollabs = idea.getCollaborators()
     ideaCollabs.add(USERNAME)

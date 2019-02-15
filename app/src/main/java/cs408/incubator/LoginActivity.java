@@ -129,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     } else {
                                         intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
                                     }
+
                                     startActivity(intent);
                                     finish();
                                 }

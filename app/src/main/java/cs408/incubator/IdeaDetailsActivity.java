@@ -1,17 +1,19 @@
 package cs408.incubator;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -26,16 +28,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import firestore_library.FirestoreLibraryKt;
 
 
 public class IdeaDetailsActivity extends AppCompatActivity {
-    String USERNAME = "yugdassani";
+    String USERNAME = FirestoreLibraryKt.getUSERNAME();
 
     EditText descTV;
     String tag;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +47,18 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.ideaDetailToolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         //descTV = findViewById(R.id.descriptionText1);
         //stDesc = getIntent().getExtras().getString("Desc");
         //descTV.setText("test");
 
         Intent i = getIntent();
-        String ideaTag = i.getStringExtra("ideaTag");
+        final String ideaTag = i.getStringExtra("ideaTag");
         tag = ideaTag;
 
         DocumentReference docRef = db.collection("Ideas").document(ideaTag);
@@ -62,13 +68,44 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        EditText desc = findViewById(R.id.descriptionText1);
-                        EditText tags = findViewById(R.id.tagText);
-                        EditText collab = findViewById(R.id.collaboratorText);
+                        TextView title = findViewById(R.id.ideaName);
+                        TextView desc = findViewById(R.id.detailDesc);
+                        EditText editableDesc = findViewById(R.id.descriptionText1);
+                        TextView tags = findViewById(R.id.tagText);
+                        TextView collab = findViewById(R.id.collaboratorText);
 
+                        title.setText(document.getString("Name"));
                         desc.setText(document.getString("Description"));
-                        tags.setText(document.get("Tags").toString());
-                        collab.setText(document.get("Collaborators").toString());
+                        editableDesc.setText(document.getString("Description"));
+
+                        if(document.get("Tags") != null) {
+                            ArrayList<String> ideaTags = (ArrayList<String>) document.get("Tags");
+                            StringBuilder t = new StringBuilder();
+                            for(int i=0; i<ideaTags.size();i++) {
+                                if(i==ideaTags.size()-1)
+                                    t.append(ideaTags.get(i));
+                                else
+                                    t.append(ideaTags.get(i)).append("\n");
+                            }
+
+                            tags.setText(t.toString());
+                        }
+                        else
+                            tags.setText("No tags yet!");
+
+                        if(document.get("Collaborators") != null) {
+                            ArrayList<String> ideaCollabs = (ArrayList<String>) document.get("Collaborators");
+                            StringBuilder t = new StringBuilder();
+                            for(int i=0; i<ideaCollabs.size();i++) {
+                                if(i == ideaCollabs.size()-1)
+                                    t.append(ideaCollabs.get(i)).append("\n");
+                                else
+                                    t.append(ideaCollabs.get(i)).append("\n");
+                            }
+
+                            collab.setText(t.toString());
+                        }
+
                     } else {
                         Toast.makeText(getApplicationContext(), "No document", Toast.LENGTH_SHORT).show();
                     }
@@ -81,44 +118,57 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
 
     public void btnEditOnClick(View v) {
-        Toast.makeText(getApplicationContext(), "Edit", Toast.LENGTH_SHORT).show();
-        Button btn = findViewById(R.id.button);
+        ImageButton btn = findViewById(R.id.button);
+        EditText et_desc = findViewById(R.id.descriptionText1);
+        TextView desc = findViewById(R.id.detailDesc);
 
-        EditText et_desc = (EditText)findViewById(R.id.descriptionText1);
+        Toast.makeText(getApplicationContext(),btn.getTag().toString(),Toast.LENGTH_SHORT).show();
+        if(btn.getTag().toString().equals("edit")){
+            desc.setVisibility(View.GONE);
+            et_desc.setVisibility(View.VISIBLE);
+            btn.setImageResource(R.drawable.ic_done);
+            btn.setTag("save");
+            Toast.makeText(getApplicationContext(),"Editing",Toast.LENGTH_SHORT).show();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Ideas").document(tag);
+        }
+        else if(btn.getTag().toString().equals("save")){
+            btn.setImageResource(R.drawable.ic_baseline_create_24px);
+            btn.setTag("edit");
+            desc.setVisibility(View.VISIBLE);
+            desc.setText(et_desc.getText().toString());
+            et_desc.setVisibility(View.GONE);
 
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            final DocumentReference docRef = db.collection("Ideas").document(tag);
 
-        if (findViewById(R.id.descriptionText1).isEnabled()) {
             final String update_desc = et_desc.getText().toString();
-            docRef
-                    .update("Description", et_desc.getText().toString())
+            docRef.update("Description", et_desc.getText().toString())
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "description", update_desc)));
-                        }
-                    })
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "description", update_desc)));
+                            }
+                        })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                         }
                     });
-            findViewById(R.id.descriptionText1).setEnabled(false);
-            btn.setText("Edit");
-        } else if (!findViewById(R.id.descriptionText1).isEnabled()) {
-            findViewById(R.id.descriptionText1).setEnabled(true);
-            btn.setText("Save");
+
         }
+    }
+
+    public void manageTasks(View v) {
 
     }
 
-    public void btnBackOnClick(View v) {
-        Toast.makeText(getApplicationContext(), "Back", Toast.LENGTH_SHORT).show();
-        Button btn = findViewById(R.id.backbutton);
-        Intent i = new Intent(this, MainIdeasActivity.class);
-        startActivity(i);
-        finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent intent =  new Intent(this,MainIdeasActivity.class);
+                finish();
+        }
+        return true;
     }
 }

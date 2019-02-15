@@ -158,7 +158,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/change_password"
             android:textStyle="bold" />
-
+        <!-- Hide For Now
         <Button
             android:id="@+id/sending_pass_reset_button"
             style="?android:textAppearanceSmall"
@@ -176,6 +176,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/remove_user"
             android:textStyle="bold" />
+        !-->
 
         <Button
             android:id="@+id/sign_out"

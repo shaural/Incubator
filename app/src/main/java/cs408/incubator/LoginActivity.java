@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                finish();
             }
         });
 
@@ -82,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
+                finish();
             }
         });
 
@@ -122,14 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     updateUserName(email);
                                     APPUSER = email;
-                                    boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                                     Intent intent;
-                                    if(isNew) {
-                                        intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                                    } else {
-                                        intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
-                                    }
-
+                                    intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }

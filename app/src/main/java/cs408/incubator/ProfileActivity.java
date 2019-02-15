@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private Button btnChangePassword, btnSendResetEmail, btnRemoveUser, btnChangeName,
-            changePassword, sendEmail, remove, changeName, signOut;
+    private Button btnChangePassword,  btnChangeName,
+            changePassword, sendEmail, remove, changeName, signOut; //btnSendResetEmail, btnRemoveUser,
     private String email, name;
     private TextView oldEmail, oldName, display_name;
     private EditText password, newPassword, newName;
@@ -81,8 +81,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         btnChangeName = (Button) findViewById(R.id.change_name_button);
         btnChangePassword = (Button) findViewById(R.id.change_password_button);
-        btnSendResetEmail = (Button) findViewById(R.id.sending_pass_reset_button);
-        btnRemoveUser = (Button) findViewById(R.id.remove_user_button);
+        /* Hide for now*/
+//        btnSendResetEmail = (Button) findViewById(R.id.sending_pass_reset_button);
+//        btnRemoveUser = (Button) findViewById(R.id.remove_user_button);
         changeName = (Button) findViewById(R.id.changeName);
         changePassword = (Button) findViewById(R.id.changePass);
         sendEmail = (Button) findViewById(R.id.send);
@@ -242,6 +243,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         /* Reset Password */
+        /* Hide for now
         btnSendResetEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,8 +283,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
-
+        */
         /* Remove Account */
+        /* Hide for now
         btnRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,6 +309,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        */
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,7 +9,7 @@ import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
-var USERNAME = "newus@gmail.com"
+var USERNAME = "test@test.com"
 
 fun updateUserName(name: String){
     USERNAME = name

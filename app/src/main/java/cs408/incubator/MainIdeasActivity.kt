@@ -28,7 +28,7 @@ import android.view.MenuItem
 class MainIdeasActivity : AppCompatActivity() {
     val REQ_CODE = 1
     var count = (0).toLong()
-    private lateinit var ideaInfoList: LinkedHashMap<String,String>
+    lateinit var ideaInfoList: LinkedHashMap<String,String>
     private lateinit var ideaByPrio: ArrayList<String>
     private lateinit var mDragList: DragListView
     private lateinit var ideaArray: ArrayList<Pair<Long,String>>
@@ -195,6 +195,7 @@ class MainIdeasActivity : AppCompatActivity() {
                 newArray.add(Pair(v,"$ideaTitle-$ideaID"))
                 newArray.addAll(ideaArray)
 
+                ideaInfoList.put(ideaID!!, ideaTitle!!)
 
                 mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
                 val listAdapter = IdeaItemAdapter(newArray,R.layout.idea_item,true)

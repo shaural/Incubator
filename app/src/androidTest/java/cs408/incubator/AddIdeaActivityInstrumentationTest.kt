@@ -105,6 +105,7 @@ class AddIdeaActivityInstrumentationTest {
         val verify = addIdeaActivity.verification
         assertEquals(verify,true)
         assert(addIdeaActivity.isFinishing)
+        assert(mainIdeasActivity.ideaInfoList.containsValue(title))
 
     }
 

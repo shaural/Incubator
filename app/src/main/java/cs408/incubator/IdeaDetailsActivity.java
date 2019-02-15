@@ -91,7 +91,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                             StringBuilder t = new StringBuilder();
                             for(int i=0; i<ideaCollabs.size();i++) {
                                 if(i == ideaCollabs.size()-1)
-                                    t.append(ideaCollabs.get(i)).append("\n");
+                                    t.append(ideaCollabs.get(i));
                                 else
                                     t.append(ideaCollabs.get(i)).append("\n");
                             }

@@ -37,7 +37,7 @@ class IdeaItemAdapter extends DragItemAdapter<Pair<Long, String>, IdeaItemAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         String text = mItemList.get(position).second;
-        String[] info = text.split( "-" );
+        String[] info = text.split( "//" );
         holder.mText.setText(info[0]);
         holder.mText.setTag(info[1]);
         holder.itemView.setTag(mItemList.get(position));

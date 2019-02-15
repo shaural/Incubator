@@ -192,7 +192,7 @@ class MainIdeasActivity : AppCompatActivity() {
                 val v: Long = (ideaArray.size + 1).toLong()
 
                 val newArray = ArrayList<Pair<Long,String>>()
-                newArray.add(Pair(v,"$ideaTitle-$ideaID"))
+                newArray.add(Pair(v,"$ideaTitle//$ideaID"))
                 newArray.addAll(ideaArray)
 
 

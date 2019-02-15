@@ -19,9 +19,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
+import static firestore_library.FirestoreLibraryKt.updateUserName;
+
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static String APPUSER;
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
@@ -35,9 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         /** Remove below line. It skips auth -- for testing
          *
          */
-        Intent intent = new Intent(this,MainIdeasActivity.class);
+        /**Intent intent = new Intent(this,MainIdeasActivity.class);
         startActivity(intent);
-        finish();
+        finish();*/
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -45,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
         /* Log In Check */
         if (auth.getCurrentUser() != null) {
+            updateUserName(Objects.requireNonNull(auth.getCurrentUser().getEmail()));
             startActivity(new Intent(LoginActivity.this, MainIdeasActivity.class));
             finish();
         }
@@ -82,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString();
+                final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
@@ -114,6 +120,8 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
+                                    updateUserName(email);
+                                    APPUSER = email;
                                     boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                                     Intent intent;
                                     if(isNew) {

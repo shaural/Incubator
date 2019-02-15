@@ -6,7 +6,11 @@ import kotlin.reflect.KFunction1
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
-val USERNAME = "ydassani"
+var USERNAME = ""
+
+fun updateUserName(name: String){
+    USERNAME = name
+}
 
 fun addIdea(idea: Idea, callback: (String) -> Unit) {
     val doc: CollectionReference = getDB().collection("Ideas")
@@ -27,7 +31,7 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
 
                 for (user in ideaCollabs) {
                     getDB().collection("Users").document(user)
-                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef))
+                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef),"Priority",FieldValue.arrayUnion(ideaRef))
                             .addOnSuccessListener {
                                 println("Added ID to $user")
                             }
@@ -114,6 +118,23 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
             .addOnFailureListener { exception ->
                 println("Error in search method...")
 //                Log.d(TAG, "Error getting documents: ", exception)
+            }
+}
+
+fun setUserDispName(disp : String, callback: (Boolean) -> Unit) {
+    val map = HashMap<String,Any>()
+    map.put("email", USERNAME)
+    map.put("name",disp)
+    map.put("Priority",ArrayList<String>())
+    map.put("Ideas_Owned",ArrayList<String>())
+
+    getDB().collection("Users").document(USERNAME).set(map)
+            .addOnSuccessListener {
+                println("Successfully set display name")
+                callback(true)
+            }
+            .addOnFailureListener {
+                println(USERNAME + "Fail!")
             }
 }
 

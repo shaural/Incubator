@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static firestore_library.FirestoreLibraryKt.updateUserName;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
@@ -89,7 +91,9 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.makeText(SignUpActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
-                                    startActivity(new Intent(SignUpActivity.this, ProfileActivity.class));
+                                    LoginActivity.APPUSER = email;
+                                    updateUserName(email);
+                                    startActivity(new Intent(SignUpActivity.this, SetupAccountActivity.class));
                                     finish();
                                 }
                             }

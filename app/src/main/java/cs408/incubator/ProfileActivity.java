@@ -323,6 +323,9 @@ public class ProfileActivity extends AppCompatActivity {
     //sign out method
     public void signOut() {
         auth.signOut();
+        Toast.makeText(ProfileActivity.this, "Signed out!", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+        finish();
     }
 
     @Override

@@ -6,7 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".Tags">
 
-    <Button
+    <android.support.v7.widget.Toolbar
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tagToolbar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+    <!--<Button
         android:layout_marginTop="20dp"
         android:id="@+id/btn_tag_back"
         android:layout_width="fill_parent"
@@ -16,18 +24,19 @@
         app:layout_constraintLeft_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/et_tag"
-        android:onClick="onClickbtnBack" />
+        android:onClick="onClickbtnBack" />-->
 
     <EditText
         android:id="@+id/et_tag"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Enter new Tag here..."
-        app:layout_constraintTop_toBottomOf="@id/btn_tag_back"
+        app:layout_constraintTop_toBottomOf="@id/tagToolbar"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btn_add_tag"
         />
+
     <Button
         android:id="@+id/btn_add_tag"
         android:layout_width="fill_parent"

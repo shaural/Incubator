@@ -2,15 +2,11 @@ package cs408.incubator;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,11 +21,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import firestore_library.FirestoreLibraryKt;
 
@@ -155,18 +148,28 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                         }
                     });
 
+            Toast.makeText(getApplicationContext(),"Saved Changes",Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void manageTasks(View v) {
+    public void manageTags(View v) {
+        Intent i = new Intent(this, Tags.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
 
+    public void manageTasks(View v) {
+        Intent i = new Intent(this, TaskActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                Intent intent =  new Intent(this,MainIdeasActivity.class);
                 finish();
         }
         return true;

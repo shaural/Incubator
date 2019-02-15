@@ -2,11 +2,15 @@ package cs408.incubator;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -30,14 +34,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import firestore_library.FirestoreLibraryKt;
+
 public class Tags extends AppCompatActivity {
-String idea_id = "irWRcr2YIjDxi2kgEn93";
-String USERNAME = "yugdassani";
+String idea_id = "";
+String USERNAME = FirestoreLibraryKt.getUSERNAME();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tags);
+
+        Intent i = getIntent();
+        idea_id = i.getStringExtra("ideaID");
+
+        Toolbar toolbar = findViewById(R.id.tagToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -140,8 +156,16 @@ String USERNAME = "yugdassani";
         startActivity(getIntent());
     }
 
-    public void onClickbtnBack(View v)
-    {
-        this.finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent intent =  new Intent(this,IdeaDetailsActivity.class);
+                intent.putExtra("ideaTag",idea_id);
+                startActivity(intent);
+                finish();
+        }
+        return true;
     }
+
 }

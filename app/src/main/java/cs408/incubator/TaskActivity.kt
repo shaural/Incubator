@@ -1,11 +1,9 @@
 package cs408.incubator
 
-import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.content.Intent
-import android.provider.Settings.Global.getString
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -14,7 +12,7 @@ import android.view.*
 import android.widget.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_item.*
+import kotlinx.android.synthetic.main.activity_task.*
 import java.util.*
 
 
@@ -22,15 +20,15 @@ import java.util.*
 import cs408.incubator.DTO.INTENT_TODO_ID
 import cs408.incubator.DTO.INTENT_TODO_NAME
 import cs408.incubator.DTO.ToDoItem
+import firestore_library.USERNAME
 
-import kotlinx.android.synthetic.main.activity_item.*
 import kotlin.collections.ArrayList
 
 
-val IDEA_ID = "f89JEFF2SHcnjnv81pDG"
-val USERNAME = "yugdassani"
 
-class ItemActivity : AppCompatActivity() {
+var IDEA_ID = ""
+class TaskActivity : AppCompatActivity() {
+
 
     var todoId: Long = -1
     var list: MutableList<ToDoItem>? = null
@@ -41,13 +39,17 @@ class ItemActivity : AppCompatActivity() {
 
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_item)
+        setContentView(R.layout.activity_task)
+
+        IDEA_ID = intent.getStringExtra("ideaID")
 
         setSupportActionBar(item_toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.title = intent.getStringExtra(INTENT_TODO_NAME)
-        todoId = intent.getLongExtra(INTENT_TODO_ID, -1)
+        val actionbarEvent = supportActionBar
+        actionbarEvent?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_back)
+        }
+
 
         rv_item.layoutManager = LinearLayoutManager(this)
 
@@ -142,7 +144,7 @@ class ItemActivity : AppCompatActivity() {
     }
 
 
-    class ItemAdapter(val activity: ItemActivity, val list: MutableList<ToDoItem>) :
+    class ItemAdapter(val activity: TaskActivity, val list: MutableList<ToDoItem>) :
             RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
@@ -232,7 +234,12 @@ class ItemActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return if (item?.itemId == android.R.id.home) {
+            val intent = Intent(applicationContext,IdeaDetailsActivity::class.java).apply {
+                putExtra("ideaTag", IDEA_ID)
+            }
+            startActivity(intent)
             finish()
+
             true
         } else
             super.onOptionsItemSelected(item)

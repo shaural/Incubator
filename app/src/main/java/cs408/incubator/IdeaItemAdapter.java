@@ -58,7 +58,7 @@ class IdeaItemAdapter extends DragItemAdapter<Pair<Long, String>, IdeaItemAdapte
 
         @Override
         public void onItemClicked(View view) {
-            Toast.makeText(view.getContext(), mText.getText()+" "+ mText.getTag()+ " clicked", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(view.getContext(), mText.getText()+" "+ mText.getTag()+ " clicked", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(view.getContext(), IdeaDetailsActivity.class);
             i.putExtra("ideaTag", mText.getTag().toString());
 

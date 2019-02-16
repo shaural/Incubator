@@ -88,12 +88,16 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     String m_Text = input.getText().toString();
-
-                                    docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
-                                    docRef.update("Tags", FieldValue.arrayUnion(m_Text));
-                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", m_Text)));
-                                    finish();
-                                    startActivity(getIntent());
+                                    if(m_Text.length() > 0) {
+                                        docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
+                                        docRef.update("Tags", FieldValue.arrayUnion(m_Text));
+                                        docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", m_Text)));
+                                        finish();
+                                        startActivity(getIntent());
+                                    } else {
+                                        dialog.cancel();
+                                        Toast.makeText(Tags.this, "Tag cannot be empty.", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -146,14 +150,18 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
     {
 
         EditText et_tag = (EditText)findViewById(R.id.et_tag);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("Ideas").document(idea_id);
-        docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString().trim()));
-        docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "add", "tag", et_tag.getText().toString().trim())));
-        Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();
-        finish();
-        startActivity(getIntent());
+        String et_text = et_tag.getText().toString().trim();
+        if(et_text.length() > 0) {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("Ideas").document(idea_id);
+            docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString().trim()));
+            docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "add", "tag", et_tag.getText().toString().trim())));
+            Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();
+            finish();
+            startActivity(getIntent());
+        } else {
+            Toast.makeText(this, "Tag cannot be empty.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

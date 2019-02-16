@@ -122,7 +122,7 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                         var temp = document.data["Name"].toString()
                         if (temp.toLowerCase().contains(query.toLowerCase())) {
                             // match
-                            searchIdeas.add("" +document.data["Name"] + "-"+document.id)
+                            searchIdeas.add("" +document.data["Name"] + "~"+document.id)
                         } else {
                             if(document.data["Tags"] != null) {
                                 val list = document.data["Tags"] as ArrayList<String>
@@ -130,7 +130,7 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                                 for (l in list) {
                                     if(l.toLowerCase().contains(query.toLowerCase())) {
                                         //tag matched
-                                        searchIdeas.add("" +document.data["Name"] + "-"+document.id)
+                                        searchIdeas.add("" +document.data["Name"] + "~"+document.id)
                                         break
                                     }
 
@@ -170,7 +170,7 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
     getDB().collection("Ideas").document(key).get()
             .addOnSuccessListener { idea ->
 
-                val ideaInfo = "" + idea["Name"] + "-"+ key
+                val ideaInfo = "" + idea["Name"] + "~"+ key
 
                 callback(ideaInfo)
             }

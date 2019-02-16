@@ -159,7 +159,7 @@ class MainIdeasActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun addToIdeaList(ideaInfo : String){
-        val ideaVals = ideaInfo.split("-")
+        val ideaVals = ideaInfo.split("~")
         ideaInfoList.replace(ideaVals[1],ideaVals[0])
         count--
         if(count == 0.toLong()){

@@ -1,10 +1,13 @@
 package cs408.incubator
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import firestore_library.addIdea
@@ -14,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_add_idea.*
 class AddIdeaActivity : AppCompatActivity() {
 
     public var verification:Boolean = false
+    var collabcheck:Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,32 +46,50 @@ class AddIdeaActivity : AppCompatActivity() {
         finish()
     }
 
-    fun verifyFields() {
+    fun verifyFields():Boolean {
         val title = findViewById<EditText>(R.id.addTitle).text.toString()
         val collabs = findViewById<EditText>(R.id.addCollab).text.toString()
 
         if(title.isBlank()){
             Toast.makeText(applicationContext,"Idea Title Cannot be Blank",Toast.LENGTH_SHORT).show()
             verification = false
-            return
+            return false
         }
         else if(title.length > 150){
             Toast.makeText(applicationContext,"Idea Title too Long. [150 character Limit]",Toast.LENGTH_SHORT).show()
             verification = false
-            return
+            return false
         }
         else if(collabs.isNotEmpty()){
             if(!verifyEmail(collabs)) {
                 Toast.makeText(applicationContext,"Invalid collaborator Email", Toast.LENGTH_SHORT).show()
                 verification = false
+                return false
             }
-            else
-                verifyUsers(collabs,::verifyUserExists)
+            else {
+                verification = true
+                return true
+            }
         }
-        else
+        else {
             verification = true
+            return true
+        }
 
+    }
 
+    fun addCollaborator(v: View){
+        val view = layoutInflater.inflate(R.layout.dialog_add_collab,null)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add Collaborator")
+                .setView(view)
+                .setPositiveButton("Add") { _, _ ->
+                    val email = view.findViewById<EditText>(R.id.collabEmail).text.toString()
+                    verifyUsers(email,::verifyCollaborator)
+                }
+                .setNegativeButton("Cancel") {_,_-> }
+        builder.create()
+        builder.show()
     }
 
     fun verifyEmail(emails : String):Boolean{
@@ -83,12 +105,23 @@ class AddIdeaActivity : AppCompatActivity() {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()
     }
 
-    fun verifyUserExists(bool : Boolean) {
-        if(!bool){
-            Toast.makeText(applicationContext,"User Not Found",Toast.LENGTH_SHORT).show()
-            return
+    fun verifyCollaborator(s:String){
+        if(s != "false") {
+            var value = ""
+            val text = findViewById<EditText>(R.id.addCollab).text.toString()
+            if(text.isEmpty())
+                value = s
+            else
+                value = "$text, $s"
+
+            findViewById<EditText>(R.id.addCollab).setText(value)
+            Toast.makeText(applicationContext,"User Added",Toast.LENGTH_SHORT).show()
+            findViewById<EditText>(R.id.addCollab).requestFocus()
         }
-        verification = true
+        else {
+            collabcheck = false
+            Toast.makeText(applicationContext, "User Not Found", Toast.LENGTH_SHORT).show()
+        }
 
     }
 
@@ -97,8 +130,7 @@ class AddIdeaActivity : AppCompatActivity() {
             return when(item.itemId){
                 R.id.confirm -> {
 
-                    verifyFields()
-                    if(verification) {
+                    if(verifyFields()) {
 
                         val idea = Idea()
                         idea.setTitle(findViewById<EditText>(R.id.addTitle).text.toString())

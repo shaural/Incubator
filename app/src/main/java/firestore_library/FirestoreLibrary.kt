@@ -214,29 +214,21 @@ fun setPriority(porder: ArrayList<String>) {
 //            .update("Priority", FieldValue.arrayUnion(str))
 //    println(str)
 
-fun verifyUsers(emails: String, callback: (Boolean) -> Unit) {
-    val users = ArrayList<String>()
-    if (emails.contains(",")) {
-        val m = emails.split(",")
-        for (mail in m)
-            users.add(mail.trim())
-    } else
-        users.add(emails)
+fun verifyUsers(email: String, callback: (String) -> Unit) {
 
-    for (user in users) {
-        getDB().collection("Users").document(user).get()
-                .addOnSuccessListener {
-                    if (!it.exists()) {
-                        println("No exist")
-                        callback(false)
-                    }
+    getDB().collection("Users").document(email).get()
+            .addOnSuccessListener {
+                if (!it.exists()) {
+                    callback("false")
+                    println("No exist")
+                }
+                else
+                    callback(email)
 
-                }
-                .addOnFailureListener {
-                    println("Fail!")
-                }
-    }
-    callback(true)
+            }
+            .addOnFailureListener {
+                println("Fail!")
+            }
 }
 
 fun addUser() {

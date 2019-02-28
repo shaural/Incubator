@@ -23,6 +23,7 @@
     <string name="desc">Description</string>
     <string name="collab">Add Collaborators</string>
     <string name="tags">Add Tags</string>
+    <string name="pics">Add Images</string>
 
     <string name="title_activity_login2">Sign in</string>
     <string name="action_sign_in_short">Register</string>

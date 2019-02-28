@@ -13,164 +13,202 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/ideaDetailToolbar"
-            android:background="@color/colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            />
-
-        <TextView
-            android:id="@+id/ideaName"
-            android:textSize="14pt"
-            android:hint="@string/title"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="15dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10pt"
-                android:text="@string/desc"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/button"
-                android:onClick="btnEditOnClick"
-                android:tag="edit"
-                android:src="@drawable/ic_baseline_create_24px"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/detailDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:textSize="8pt"
-            android:hint="No description provided"/>
-
-        <EditText
-            android:id="@+id/descriptionText1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:textSize="8pt"
-            android:ems="10"
-            android:hint="@string/desc"
-            android:inputType="text|textMultiLine"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/ideaDetailToolbar"
+                android:background="@color/colorPrimary"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10pt"
-                android:text="Tags"/>
+                android:id="@+id/ideaName"
+                android:textSize="14pt"
+                android:hint="@string/title"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/tagButton"
-                android:onClick="manageTags"
-                android:src="@drawable/ic_add"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10pt"
+                    android:text="@string/desc"/>
 
-        </LinearLayout>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/tagText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:textSize="8pt"
-            android:hint="Tags for this idea"/>
+                <ImageButton
+                    android:id="@+id/button"
+                    android:onClick="btnEditOnClick"
+                    android:tag="edit"
+                    android:src="@drawable/ic_baseline_create_24px"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/detailDesc"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="10pt"
-                android:text="Collaborators"/>
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="5dp"
+                android:textSize="8pt"
+                android:hint="No description provided"/>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/descriptionText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="5dp"
+                android:textSize="8pt"
+                android:ems="10"
+                android:hint="@string/desc"
+                android:inputType="text|textMultiLine"
+                android:visibility="gone"/>
 
-            <ImageButton
-                android:id="@+id/collabButton"
-                android:src="@drawable/ic_add"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-            />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10pt"
+                    android:text="Tags"/>
 
-        <TextView
-            android:id="@+id/collaboratorText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:textSize="8pt"
-            android:hint="Collaborators"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
+                <ImageButton
+                    android:id="@+id/tagButton"
+                    android:onClick="manageTags"
+                    android:src="@drawable/ic_add"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tagText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="5dp"
+                android:textSize="8pt"
+                android:hint="Tags for this idea"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10pt"
+                    android:text="Collaborators"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/collabButton"
+                    android:src="@drawable/ic_add"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/collaboratorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="5dp"
+                android:textSize="8pt"
+                android:hint="Collaborators"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10pt"
+                    android:text="Images"/>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/picButton"
+                    android:src="@drawable/ic_add"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
+    <Button
+        android:id="@+id/show_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button_upload"
+        android:layout_alignBottom="@+id/button_upload"
+        android:layout_marginStart="5dp"
+        android:layout_toEndOf="@+id/button_upload"
+        android:gravity="center"
+        android:text="Show Images" />
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"

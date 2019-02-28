@@ -27,8 +27,9 @@ import cs408.incubator.R;
 import firestore_library.FirestoreLibraryKt;
 
 public class NotesActivity extends AppCompatActivity {
-    String idea_id = "";
-    String USERNAME = FirestoreLibraryKt.getUSERNAME();
+    String idea_id = "idea1";
+//    String USERNAME = FirestoreLibraryKt.getUSERNAME();
+    String USERNAME = "User1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +38,13 @@ public class NotesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent i = getIntent();
-        idea_id = i.getStringExtra("ideaID");
+//        Intent i = getIntent();
+//        idea_id = i.getStringExtra("ideaID");
 
         final ListView notes_list = findViewById(R.id.lv_notes);
         final TextView empty = findViewById(R.id.tv_notes_empty);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Notes").document("idea");
+        final DocumentReference docRef = db.collection("Notes").document(idea_id);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -51,7 +52,7 @@ public class NotesActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Map<String, String> map_user_notes = (Map<String, String>)document.get("User1");
+                        Map<String, String> map_user_notes = (Map<String, String>)document.get(USERNAME);
                         if(map_user_notes.isEmpty()) {
                             // no notes
                             empty.setVisibility(View.VISIBLE);
@@ -88,8 +89,10 @@ public class NotesActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(getApplicationContext(), AddNoteActivity.class);
+                i.putExtra("ideaID", idea_id);
+                startActivity(i);
+                finish();
             }
         });
 

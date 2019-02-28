@@ -17,9 +17,19 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:name=".AddNoteActivity"
+            android:label="@string/title_activity_add_note"
+            android:parentActivityName=".NotesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs408.incubator.NotesActivity" />
+        </activity>
+        <activity
             android:name=".NotesActivity"
             android:label="@string/title_activity_notes"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".IdeaDetailsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,19 +48,19 @@
         <activity
             android:name=".TaskActivity"
             android:label="My Tasks"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".IdeaDetailsActivity"
             android:label="@string/title_activity_idea_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainIdeasActivity"
             android:label="@string/title_activity_main_ideas"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddIdeaActivity"
             android:label="@string/title_activity_add_idea"
@@ -58,11 +68,11 @@
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SetupAccountActivity"
             android:label="@string/app_name"

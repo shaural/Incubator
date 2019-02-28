@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import firestore_library.FirestoreLibraryKt;
 
 import static firestore_library.FirestoreLibraryKt.getDB;
+import static firestore_library.FirestoreLibraryKt.verifyUsers;
 
 
 public class IdeaDetailsActivity extends AppCompatActivity {
@@ -275,6 +276,109 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     }
 
     public void manageCollabs(View v){
+        final View view = getLayoutInflater().inflate(R.layout.dialog_add_collab,null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailsActivity.this);
+        builder.setTitle("Add Collaborator")
+                .setView(view)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText emailView = view.findViewById(R.id.collabEmail);
+                        String email = emailView.getText().toString();
+                        checkCollaborator(email);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
+
+    public void checkCollaborator(String s){
+        final String newUser = s;
+        getDB().collection("Users").document(newUser)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()){
+                                getDB().collection("Users").document(newUser)
+                                        .update("Ideas_Owned",FieldValue.arrayUnion(tag),
+                                                "Priority",FieldValue.arrayUnion(tag));
+
+                                getDB().collection("Ideas").document(tag)
+                                        .update("Collaborators",FieldValue.arrayUnion(newUser))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                getDB().collection("Ideas").document(tag)
+                                                        .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
+                                                                "collaborator",newUser)));
+
+                                                addCollabUI(newUser);
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                            }
+                                        });
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(),"User Not Found",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+
+    }
+
+    public void addCollabUI(String user){
+        LinearLayout collabView = findViewById(R.id.collabView);
+        final TextView text = new TextView(getApplicationContext());
+        text.setText(user);
+        text.setTextSize(TypedValue.COMPLEX_UNIT_PT,8.0F);
+        if(USERNAME.equals(idea_owner)){
+            text.setClickable(true);
+            text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String rmuser = text.getText().toString();
+                    if (rmuser.equals(USERNAME)) {
+                        Toast.makeText(getApplicationContext(),"Delete Idea to remove yourself as collaborator",Toast.LENGTH_LONG).show();
+
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailsActivity.this);
+                        builder.setTitle("Remove User")
+                                .setMessage("Are you sure you want remove " + rmuser + "?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        text.setVisibility(View.GONE);
+                                        removeUser(rmuser);
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        builder.create();
+                        builder.show();
+                    }
+                }
+            });
+        }
+        collabView.addView(text);
 
     }
 

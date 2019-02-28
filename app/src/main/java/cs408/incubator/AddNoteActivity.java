@@ -112,7 +112,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
 
                 // check if title is unique
-                if(title_list != null && title_list.contains(title)) {
+                if((!title.equals(old_title)) && title_list != null && title_list.contains(title)) {
                     Toast.makeText(this, "Must have a unique title.", Toast.LENGTH_SHORT).show();
                     return super.onOptionsItemSelected(item);
                 }

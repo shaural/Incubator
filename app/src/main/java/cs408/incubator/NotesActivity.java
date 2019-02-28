@@ -63,6 +63,7 @@ public class NotesActivity extends AppCompatActivity {
 
                             // display titles in list view
                             final List<String> title_list = new ArrayList<String>(map_user_notes.keySet());
+                            final List<String> val_list = new ArrayList<>(map_user_notes.values());
                             ArrayAdapter<String> itemsAdapter =
                                     new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, title_list);
                             notes_list.setAdapter(itemsAdapter);
@@ -71,7 +72,14 @@ public class NotesActivity extends AppCompatActivity {
                                 // argument position gives the index of item which is clicked
                                 public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
                                     final String selected_tag = title_list.get(position);
+                                    final String selected_desc = val_list.get(position);
                                     // TODO open note (new activity)
+                                    Intent i = new Intent(getApplicationContext(), AddNoteActivity.class);
+                                    i.putExtra("ideaID", idea_id);
+                                    i.putExtra("new_note", false);
+                                    i.putExtra("title", selected_tag);
+                                    i.putExtra("desc", selected_desc);
+                                    startActivity(i);
                                 }
                             });
                         }
@@ -91,8 +99,8 @@ public class NotesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), AddNoteActivity.class);
                 i.putExtra("ideaID", idea_id);
+                i.putExtra("new_note", true);
                 startActivity(i);
-                finish();
             }
         });
 

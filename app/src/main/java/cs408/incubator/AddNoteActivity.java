@@ -28,6 +28,12 @@ public class AddNoteActivity extends AppCompatActivity {
     String idea_id = "";
 //    String USERNAME = FirestoreLibraryKt.getUSERNAME();
     String USERNAME = "User1";
+    Boolean new_note = true;
+    EditText tv_title = null;
+    EditText tv_desc = null;
+    String old_title = "";
+    String old_desc = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +42,22 @@ public class AddNoteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.addNoteToolbar);
         setSupportActionBar(toolbar);
 
+        tv_title = findViewById(R.id.et_add_note_title);
+        tv_desc = findViewById(R.id.et_add_note_desc);
+
         Intent i = getIntent();
         idea_id = i.getStringExtra("ideaID");
+        new_note = i.getBooleanExtra("new_note", true);
+
+        if(!new_note) {
+            // TODO set edit text values
+            String tit = i.getStringExtra("title");
+            String des = i.getStringExtra("desc");
+            tv_title.setText(tit);
+            tv_desc.setText(des);
+            old_title = tit;
+            old_desc = des;
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -52,8 +72,6 @@ public class AddNoteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.confirm_add_note:
                 // Save note
-                final EditText tv_title = findViewById(R.id.et_add_note_title);
-                final EditText tv_desc = findViewById(R.id.et_add_note_desc);
                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
                 final DocumentReference docRef = db.collection("Notes").document(idea_id);
 
@@ -69,6 +87,23 @@ public class AddNoteActivity extends AppCompatActivity {
                     Toast.makeText(this, "Cannot create an empty note.", Toast.LENGTH_SHORT).show();
                     return super.onOptionsItemSelected(item);
                 }
+
+                // check if title is unique
+
+                // check if content changed
+                if((!new_note) && title.equals(old_title) && desc.equals(old_desc)) {
+                    // title and desc are the same
+                    NavUtils.navigateUpFromSameTask(this);
+                    return true;
+                } else {
+                    // delete old
+                    Map<String, Object> data = new HashMap<>();
+                    Map<String, Object> mitem = new HashMap<>();
+                    mitem.put(old_title, FieldValue.delete());
+                    data.put(USERNAME, mitem);
+                    docRef.set(data, SetOptions.merge());
+                }
+
 
                 Map<String, Object> data = new HashMap<>();
                 Map<String, String> mitem = new HashMap<>();

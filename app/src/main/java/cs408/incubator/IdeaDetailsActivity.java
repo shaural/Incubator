@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
@@ -25,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 import firestore_library.FirestoreLibraryKt;
+
+import static firestore_library.FirestoreLibraryKt.getDB;
 
 
 public class IdeaDetailsActivity extends AppCompatActivity {
@@ -109,6 +113,14 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_idea_detail, menu);
+
+        // return true so that the menu pop up is opened
+        return true;
+    }
 
     public void btnEditOnClick(View v) {
         ImageButton btn = findViewById(R.id.button);
@@ -188,10 +200,99 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+
             case android.R.id.home:
                 Intent i = new Intent(this,MainIdeasActivity.class);
                 startActivity(i);
                 finish();
+                break;
+
+            case R.id.delete:
+                getDB().collection("Users").document(USERNAME)
+                        .update("Ideas_Owned",FieldValue.arrayRemove(tag),"Priority",FieldValue.arrayRemove(tag))
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                System.out.println("Idea removed from user metadata");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            }
+                        });
+
+                TextView a = findViewById(R.id.collaboratorText);
+                if(a.getText().toString().equals(USERNAME)){
+                    getDB().collection("Ideas").document(tag).delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                   System.out.println("Idea Deleted!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                }
+                else {
+
+                    getDB().collection("Ideas").document(tag)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        String owner = document.getString("Owner");
+                                        final ArrayList<String> ideaCollabs = (ArrayList<String>) document.get("Collaborators");
+                                        if(owner.equals(USERNAME)){
+                                            ideaCollabs.remove(USERNAME);
+                                            getDB().collection("Ideas").document(tag)
+                                                    .update("Collaborators", FieldValue.arrayRemove(USERNAME),"Owner",ideaCollabs.get(0))
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            getDB().collection("Ideas").document(tag)
+                                                                    .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "delete", "idea", USERNAME)),
+                                                                            "Log",FieldValue.arrayUnion(LogKt.genLogStr("Owner", "changed", "to", ideaCollabs.get(0))));
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                        }
+                                                    });
+                                        }
+                                        else {
+                                            getDB().collection("Ideas").document(tag)
+                                                    .update("Collaborators", FieldValue.arrayRemove(USERNAME))
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            getDB().collection("Ideas").document(tag)
+                                                                    .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "delete", "idea", USERNAME)));
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                        }
+                                                    });
+                                        }
+
+                                    }
+                                }
+                            });
+
+                }
+
+                Intent j = new Intent(this,MainIdeasActivity.class);
+                startActivity(j);
+                finish();
+                break;
         }
         return true;
     }

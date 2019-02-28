@@ -43,7 +43,7 @@ public class NotesActivity extends AppCompatActivity {
         final ListView notes_list = findViewById(R.id.lv_notes);
         final TextView empty = findViewById(R.id.tv_notes_empty);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        final DocumentReference docRef = db.collection("Notes").document("idea1");
+        final DocumentReference docRef = db.collection("Notes").document("idea");
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

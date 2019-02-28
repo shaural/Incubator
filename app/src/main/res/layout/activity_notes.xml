@@ -9,7 +9,8 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -21,27 +22,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:layout_marginTop="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_notes_empty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="You don't have any personal notes on this idea, use the + button to add a new note."
-            android:visibility="invisible" />
-
-        <ListView
-            android:id="@+id/lv_notes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
-
-    </LinearLayout>
-
+    <include layout="@layout/content_notes" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddNote"

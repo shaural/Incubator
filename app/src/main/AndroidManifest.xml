@@ -73,6 +73,11 @@
             android:label="UploadFileActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".ViewUploadsActivity"
+            android:label="ViewUploadsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
 
         <activity android:name=".SetupAccountActivity"
             android:label="@string/app_name"

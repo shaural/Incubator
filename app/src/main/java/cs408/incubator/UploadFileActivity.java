@@ -24,10 +24,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UploadFileActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,34 +48,30 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference mStorageReference;
     DatabaseReference mDatabaseReference;
+    private FirebaseFirestore db;
+    private Map<String, Object> docs = new HashMap<>();
 
-    //
-    private String userId;
-    private String userPath;
+    String idea_id;
 
-    private static final String[] PUBLIC_DIR = {Environment.getExternalStoragePublicDirectory
-            (Environment.DIRECTORY_DOWNLOADS).getPath(),
-            Environment.getExternalStoragePublicDirectory
-                    (Environment.DIRECTORY_PICTURES).getPath(),
-            Environment.getExternalStoragePublicDirectory
-                    (Environment.DIRECTORY_MUSIC).getPath(),
-            Environment.getExternalStoragePublicDirectory
-                    (Environment.DIRECTORY_MOVIES).getPath()};
     //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_file);
 
+        Intent i = getIntent();
+        idea_id = i.getStringExtra("ideaID");
 
         //getting firebase objects
         mStorageReference = storage.getReference();
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_PATH_UPLOADS);
+        //mDatabaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_PATH_UPLOADS);
+        db = FirebaseFirestore.getInstance();
 
         //getting the views
         textViewStatus = (TextView) findViewById(R.id.textViewStatus);
         editTextFilename = (EditText) findViewById(R.id.editTextFileName);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
+
 
         //attaching listeners to views
         findViewById(R.id.buttonUploadFile).setOnClickListener(this);
@@ -116,66 +117,76 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
 
 
     //this method is uploading the file
-    //the code is same as the previous tutorial
-    //so we are not explaining it
     private void uploadFile(Uri data) {
         progressBar.setVisibility(View.VISIBLE);
 
-        final StorageReference ref = mStorageReference.child(Constants.STORAGE_PATH_UPLOADS + System.currentTimeMillis() + ".pdf");
+        final StorageReference ref = mStorageReference.child(Constants.STORAGE_PATH_UPLOADS + "/" +
+                idea_id + "/" + System.currentTimeMillis() + ".pdf");
 
         UploadTask uploadTask = ref.putFile(data);
 
-        uploadTask.addOnFailureListener(new OnFailureListener() {
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                textViewStatus.setText("Uploading...");
+                // Continue with the task to get the download URL
+                return ref.getDownloadUrl();
             }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-                progressBar.setVisibility(View.GONE);
-                textViewStatus.setText("File Uploaded Successfully");
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @SuppressWarnings("VisibleForTests")
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                textViewStatus.setText((int) progress + "% Uploading...");
-            }
-        });;
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    progressBar.setVisibility(View.GONE);
+                    textViewStatus.setText("File Uploaded Successfully :)");
+                    docs.put("name", editTextFilename.getText().toString());
+                    docs.put("url", downloadUri.toString());
+//                    Upload upload = new Upload(editTextFilename.getText().toString(), downloadUri.toString());
+                    db.collection("Ideas").document(idea_id).collection("Documents").add(docs);
+                    //mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
 
+                } else {
+                    // Handle failures
+                    // ...
+                    progressBar.setVisibility(View.GONE);
+                    textViewStatus.setText("Fail File Upload :(");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+//                // ...
+//                progressBar.setVisibility(View.GONE);
+//                textViewStatus.setText("File Uploaded Successfully");
 //
-//        ref.putFile(data)
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @SuppressWarnings("VisibleForTests")
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        progressBar.setVisibility(View.GONE);
-//                        textViewStatus.setText("File Uploaded Successfully");
-//
-//                        Upload upload = new Upload(editTextFilename.getText().toString(), taskSnapshot.getDownloadUrl().toString());
-//                        mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-//                    }
-//                })
-//                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                    @SuppressWarnings("VisibleForTests")
-//                    @Override
-//                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//                        textViewStatus.setText((int) progress + "% Uploading...");
-//                    }
-//                });
+//                Upload upload = new Upload(editTextFilename.getText().toString(), ref.getDownloadUrl().toString());
+//                mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
+//            }
+//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @SuppressWarnings("VisibleForTests")
+//            @Override
+//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                textViewStatus.setText((int) progress + "% Uploading...");
+//            }
+//        });
 
     }
 
@@ -186,7 +197,10 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                 getPDF();
                 break;
             case R.id.textViewUploads:
-                startActivity(new Intent(this, ViewUploadsActivity.class));
+                Intent i = new Intent(this, ViewUploadsActivity.class);
+                i.putExtra("ideaID",idea_id);
+                startActivity(i);
+                finish();
                 break;
         }
     }

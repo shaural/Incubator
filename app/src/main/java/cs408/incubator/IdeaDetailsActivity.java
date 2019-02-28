@@ -166,6 +166,13 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         finish();
     }
 
+    public void manageDocument(View v) {
+        Intent i = new Intent(this, UploadFileActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){

@@ -32,8 +32,8 @@ import firestore_library.FirestoreLibraryKt;
 
 public class AddNoteActivity extends AppCompatActivity {
     String idea_id = "";
-    //    String USERNAME = FirestoreLibraryKt.getUSERNAME();
-    String USERNAME = "User1";
+        String USERNAME = FirestoreLibraryKt.getUSERNAME();
+//    String USERNAME = "shaural@live.com";
     Boolean new_note = true;
     EditText tv_title = null;
     EditText tv_desc = null;
@@ -73,7 +73,7 @@ public class AddNoteActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
+                    if (document.exists() && document.contains(USERNAME)) {
                         Map<String, String> map_user_notes = (Map<String, String>) document.get(USERNAME);
                         title_list = new ArrayList<String>(map_user_notes.keySet());
                     }
@@ -81,7 +81,7 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -118,17 +118,23 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
 
                 // check if content changed
-                if ((!new_note) && title.equals(old_title) && desc.equals(old_desc)) {
+                if (title.equals(old_title) && desc.equals(old_desc)) {
                     // title and desc are the same
-                    NavUtils.navigateUpFromSameTask(this);
+//                    NavUtils.navigateUpFromSameTask(this);
+                    Intent i = new Intent(getApplicationContext(), NotesActivity.class);
+                    i.putExtra("ideaID", idea_id);
+                    startActivity(i);
+                    finish();
                     return true;
                 } else {
                     // delete old
-                    Map<String, Object> data = new HashMap<>();
-                    Map<String, Object> mitem = new HashMap<>();
-                    mitem.put(old_title, FieldValue.delete());
-                    data.put(USERNAME, mitem);
-                    docRef.set(data, SetOptions.merge());
+                    if(!new_note) {
+                        Map<String, Object> data = new HashMap<>();
+                        Map<String, Object> mitem = new HashMap<>();
+                        mitem.put(old_title, FieldValue.delete());
+                        data.put(USERNAME, mitem);
+                        docRef.set(data, SetOptions.merge());
+                    }
                 }
 
 
@@ -137,7 +143,11 @@ public class AddNoteActivity extends AppCompatActivity {
                 mitem.put(title, desc);
                 data.put(USERNAME, mitem);
                 docRef.set(data, SetOptions.merge());
-                NavUtils.navigateUpFromSameTask(this);
+//                NavUtils.navigateUpFromSameTask(this);
+                Intent i = new Intent(getApplicationContext(), NotesActivity.class);
+                i.putExtra("ideaID", idea_id);
+                startActivity(i);
+                finish();
                 return true;
 
             default:

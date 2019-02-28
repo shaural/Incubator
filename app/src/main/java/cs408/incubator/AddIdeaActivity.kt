@@ -3,13 +3,19 @@ package cs408.incubator
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Patterns
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
+import com.google.firebase.firestore.CollectionReference
 import firestore_library.addIdea
+import firestore_library.getDB
 import firestore_library.verifyUsers
 import kotlinx.android.synthetic.main.activity_add_idea.*
+//import javax.swing.UIManager.put
+
+
 
 class AddIdeaActivity : AppCompatActivity() {
 
@@ -34,6 +40,13 @@ class AddIdeaActivity : AppCompatActivity() {
 
     fun returnIdea(id : String){
         Toast.makeText(applicationContext,"Success",Toast.LENGTH_SHORT).show()
+
+        // create entry in notes table when new idea created
+        val data = HashMap<String, String>()
+        data.put("Idea_Title", findViewById<EditText>(R.id.addTitle).text.toString())
+        getDB().collection("Notes").document(id).set(data)
+
+
         val intent = Intent(this,MainIdeasActivity::class.java).apply {
             putExtra("IDEA_TITLE",findViewById<EditText>(R.id.addTitle).text.toString())
             putExtra("IDEA_ID",id)
@@ -74,13 +87,13 @@ class AddIdeaActivity : AppCompatActivity() {
         if(emails.contains(",")){
             val emailList = emails.split(",")
             for(mail in emailList){
-                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(mail.trim()).matches())
+                if(!Patterns.EMAIL_ADDRESS.matcher(mail.trim()).matches())
                     return false
             }
             return true
         }
         else
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(emails).matches()
+            return Patterns.EMAIL_ADDRESS.matcher(emails).matches()
     }
 
     fun verifyUserExists(bool : Boolean) {

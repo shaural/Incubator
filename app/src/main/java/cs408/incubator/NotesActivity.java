@@ -33,9 +33,9 @@ import cs408.incubator.R;
 import firestore_library.FirestoreLibraryKt;
 
 public class NotesActivity extends AppCompatActivity {
-    String idea_id = "idea1";
-//    String USERNAME = FirestoreLibraryKt.getUSERNAME();
-    String USERNAME = "User1";
+    String idea_id = "uKRifMUJm9IcOwVUx3C0";
+    String USERNAME = FirestoreLibraryKt.getUSERNAME();
+//    String USERNAME = "shaural@live.com";
     List<String> title_list = null;
     List<String> val_list = null;
     FirebaseFirestore db = null;
@@ -48,8 +48,8 @@ public class NotesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        Intent i = getIntent();
-//        idea_id = i.getStringExtra("ideaID");
+        Intent i = getIntent();
+        idea_id = i.getStringExtra("ideaID");
 
         final ListView notes_list = findViewById(R.id.lv_notes);
         final TextView empty = findViewById(R.id.tv_notes_empty);
@@ -62,18 +62,20 @@ public class NotesActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Map<String, String> map_user_notes = (Map<String, String>)document.get(USERNAME);
-                        if(map_user_notes.isEmpty()) {
-                            // no notes
-                            empty.setVisibility(View.VISIBLE);
-                            notes_list.setVisibility(View.INVISIBLE);
-                        } else {
+                        Map<String, String> map_user_notes = null;
+                        try {
+                            map_user_notes = ((Map<String, String>) document.getData().get(USERNAME));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if(map_user_notes != null && !map_user_notes.isEmpty()) {
+
                             empty.setVisibility(View.INVISIBLE);
                             notes_list.setVisibility(View.VISIBLE);
 
                             // display titles in list view
                             title_list = new ArrayList<String>(map_user_notes.keySet());
-                            val_list = new ArrayList<>(map_user_notes.values());
+                            val_list = new ArrayList<String>(map_user_notes.values());
                             ArrayAdapter<String> itemsAdapter =
                                     new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, title_list);
                             notes_list.setAdapter(itemsAdapter);
@@ -92,6 +94,10 @@ public class NotesActivity extends AppCompatActivity {
                                     startActivity(i);
                                 }
                             });
+                        } else {
+                            // no notes
+                            empty.setVisibility(View.VISIBLE);
+                            notes_list.setVisibility(View.INVISIBLE);
                         }
                     } else {
                         empty.setVisibility(View.VISIBLE);

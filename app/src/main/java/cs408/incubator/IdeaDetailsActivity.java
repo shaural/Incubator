@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -73,6 +75,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                         EditText editableDesc = findViewById(R.id.descriptionText1);
                         TextView tags = findViewById(R.id.tagText);
                         TextView collab = findViewById(R.id.collaboratorText);
+                        LinearLayout collabView = findViewById(R.id.collabView);
 
                         title.setText(document.getString("Name"));
                         desc.setText(document.getString("Description"));
@@ -95,6 +98,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                             tags.setText("No tags yet!");
 
                         if(document.get("Collaborators") != null) {
+                            collab.setVisibility(View.GONE);
                             ArrayList<String> ideaCollabs = (ArrayList<String>) document.get("Collaborators");
                             StringBuilder t = new StringBuilder();
                             for(int i=0; i<ideaCollabs.size();i++) {
@@ -102,6 +106,52 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                                     t.append(ideaCollabs.get(i));
                                 else
                                     t.append(ideaCollabs.get(i)).append("\n");
+
+                                if(USERNAME.equals(idea_owner)){
+
+                                    final TextView text = new TextView(getApplicationContext());
+                                    text.setText(ideaCollabs.get(i));
+                                    text.setTextSize(TypedValue.COMPLEX_UNIT_PT,8.0F);
+                                    text.setClickable(true);
+
+                                    text.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            final String user = text.getText().toString();
+                                            if (user.equals(USERNAME)) {
+                                                Toast.makeText(getApplicationContext(),"Delete Idea to remove yourself as collaborator",Toast.LENGTH_LONG).show();
+
+                                            } else {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailsActivity.this);
+                                                builder.setTitle("Remove User")
+                                                        .setMessage("Are you sure you want remove " + user + "?")
+                                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                text.setVisibility(View.GONE);
+                                                                removeUser(user);
+                                                            }
+                                                        })
+                                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                                builder.create();
+                                                builder.show();
+                                            }
+                                        }
+                                    });
+                                    collabView.addView(text);
+
+                                }
+                                else {
+                                    final TextView text = new TextView(getApplicationContext());
+                                    text.setTextSize(TypedValue.COMPLEX_UNIT_PT,8.0F);
+                                    text.setText(ideaCollabs.get(i));
+                                    collabView.addView(text);
+                                }
                             }
 
                             collab.setText(t.toString());
@@ -115,6 +165,29 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void removeUser(final String user) {
+        getDB().collection("Ideas").document(tag)
+                .update("Collaborators",FieldValue.arrayRemove(user))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        getDB().collection("Ideas").document(tag)
+                                .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "remove","user",user)));
+
+                        getDB().collection("Users").document(user)
+                                .update("Ideas_Owned",FieldValue.arrayRemove(tag),"Priority",FieldValue.arrayRemove(tag));
+
+                        Toast.makeText(getApplicationContext(),user + " removed from idea",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
     }
 
     @Override
@@ -317,6 +390,8 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                                 dialog.cancel();
                             }
                         });
+                builder.create();
+                builder.show();
 
 
         }

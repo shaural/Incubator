@@ -115,9 +115,15 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         EditText et_desc = findViewById(R.id.descriptionText1);
         TextView desc = findViewById(R.id.detailDesc);
 
+        EditText idea_title = findViewById(R.id.editIdeaName);
+        TextView prevTitle = findViewById(R.id.ideaName);
+
         Toast.makeText(getApplicationContext(),btn.getTag().toString(),Toast.LENGTH_SHORT).show();
         if(btn.getTag().toString().equals("edit")){
+            idea_title.setText(prevTitle.getText());
             desc.setVisibility(View.GONE);
+            prevTitle.setVisibility(View.GONE);
+            idea_title.setVisibility(View.VISIBLE);
             et_desc.setVisibility(View.VISIBLE);
             btn.setImageResource(R.drawable.ic_done);
             btn.setTag("save");
@@ -127,19 +133,32 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         else if(btn.getTag().toString().equals("save")){
             btn.setImageResource(R.drawable.ic_baseline_create_24px);
             btn.setTag("edit");
+            final String oldDesc = desc.getText().toString();
+            final String oldTitle = prevTitle.getText().toString();
+
             desc.setVisibility(View.VISIBLE);
             desc.setText(et_desc.getText().toString());
             et_desc.setVisibility(View.GONE);
+
+            prevTitle.setVisibility(View.VISIBLE);
+            prevTitle.setText(idea_title.getText().toString());
+            idea_title.setVisibility(View.GONE);
+
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             final DocumentReference docRef = db.collection("Ideas").document(tag);
 
             final String update_desc = et_desc.getText().toString();
-            docRef.update("Description", et_desc.getText().toString())
+            final String update_title = idea_title.getText().toString();
+            docRef.update("Description", update_desc,"Name",update_title)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "description", update_desc)));
+                                if(!oldDesc.equals(update_desc))
+                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "description", update_desc)));
+
+                                if(!oldTitle.equals(update_title))
+                                    docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "Name", update_title)));
                             }
                         })
                     .addOnFailureListener(new OnFailureListener() {
@@ -170,6 +189,8 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
+                Intent i = new Intent(this,MainIdeasActivity.class);
+                startActivity(i);
                 finish();
         }
         return true;

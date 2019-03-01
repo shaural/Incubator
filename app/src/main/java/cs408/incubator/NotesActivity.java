@@ -48,6 +48,7 @@ public class NotesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notes);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent i = getIntent();
         idea_id = i.getStringExtra("ideaID");
@@ -174,4 +175,15 @@ public class NotesActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent intent =  new Intent(this, IdeaDetailsActivity.class);
+                intent.putExtra("ideaTag",idea_id);
+                startActivity(intent);
+                finish();
+        }
+        return true;
+    }
 }

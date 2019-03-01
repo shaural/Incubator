@@ -81,7 +81,7 @@ public class AddNoteActivity extends AppCompatActivity {
             }
         });
 
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -150,6 +150,12 @@ public class AddNoteActivity extends AppCompatActivity {
                 finish();
                 return true;
 
+            case android.R.id.home:
+                Intent intent =  new Intent(this, NotesActivity.class);
+                intent.putExtra("ideaID",idea_id);
+                startActivity(intent);
+                finish();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -157,5 +163,6 @@ public class AddNoteActivity extends AppCompatActivity {
 
         }
     }
+
 
 }

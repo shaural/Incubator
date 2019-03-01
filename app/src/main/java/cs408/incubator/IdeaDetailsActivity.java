@@ -156,27 +156,27 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         Intent i = new Intent(this, Tags.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-//        finish();
+        finish();
     }
 
     public void manageTasks(View v) {
         Intent i = new Intent(this, TaskActivity.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-//        finish();
+        finish();
     }
 
     public void personalNotes(View v) {
         Intent i = new Intent(this, NotesActivity.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-//        finish();
+        finish();
     }
     public void sharedNotes(View v) {
         Intent i = new Intent(this, SharedNotesActivity.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-//        finish();
+        finish();
     }
 
     @Override

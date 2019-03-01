@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -89,9 +90,11 @@ public class SharedNotesActivity extends AppCompatActivity {
                                     Object clickItemObj = adapterView.getAdapter().getItem(index);
                                     Map<String, Object> lim = (Map<String, Object>)clickItemObj;
                                     Intent i = new Intent(getApplicationContext(), ViewNoteActivity.class);
+                                    i.putExtra("ideaID", idea_id);
                                     i.putExtra("title", lim.get("title").toString());
                                     i.putExtra("desc", val_list.get(index));
                                     startActivity(i);
+                                    finish();
                                 }
                             });
 
@@ -115,6 +118,19 @@ public class SharedNotesActivity extends AppCompatActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent intent =  new Intent(this, IdeaDetailsActivity.class);
+                intent.putExtra("ideaTag",idea_id);
+                startActivity(intent);
+                finish();
+        }
+        return true;
     }
 
 }

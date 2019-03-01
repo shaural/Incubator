@@ -50,6 +50,8 @@ import java.util.List;
         private static ArrayList<Type> mArrayList = new ArrayList<>();
         private static final String TAG = "image_list";
 
+        private String ideaId = "";
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -60,6 +62,7 @@ import java.util.List;
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             mProgressCircle = findViewById(R.id.progress_circle);
+            ideaId = getIntent().getStringExtra("ideaID");
 
             mUploads = new ArrayList<>();
 
@@ -168,14 +171,17 @@ import java.util.List;
         }
 
 
-        @Override
+        /**@Override
         public void onBackPressed()
         {
             super.onBackPressed();
+            Intent i = new Intent(getApplicationContext(),IdeaDetailsActivity.class);
+            i.putExtra("ideaTag",ideaId);
             startActivity(new Intent(image_list.this, image_activity.class));
             finish();
 
-        }
+        }*/
+
         @Override
         public void onRestart()
         {

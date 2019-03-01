@@ -202,7 +202,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         Intent i = new Intent(this, image_list.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-        finish();
+        //finish();
     }
 
 

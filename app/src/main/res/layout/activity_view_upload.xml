@@ -8,7 +8,7 @@
     tools:context=".ViewUploadsActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/item_toolbar"
+        android:id="@+id/view_toolbar"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -19,6 +19,7 @@
         android:id="@+id/documentsListLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/view_toolbar"
         android:text="Document List"
         android:textAlignment="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />

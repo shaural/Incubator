@@ -10,7 +10,10 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,14 +23,12 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -47,11 +48,12 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
     //the firebase objects for storage and database
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference mStorageReference;
-    DatabaseReference mDatabaseReference;
+
     private FirebaseFirestore db;
     private Map<String, Object> docs = new HashMap<>();
 
-    String idea_id;
+    /* Var */
+    String idea_id, docs_id;
 
     //
     @Override
@@ -59,12 +61,15 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_file);
 
+        Toolbar toolbar = findViewById(R.id.upload_toolbar);
+        setSupportActionBar(toolbar);
+
+
         Intent i = getIntent();
         idea_id = i.getStringExtra("ideaID");
 
         //getting firebase objects
         mStorageReference = storage.getReference();
-        //mDatabaseReference = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_PATH_UPLOADS);
         db = FirebaseFirestore.getInstance();
 
         //getting the views
@@ -80,8 +85,7 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
 
     //this function will get the pdf from the storage
     private void getPDF() {
-        //for greater than lolipop versions we need the permissions asked on runtime
-        //so if the permission is not available user will go to the screen to allow storage permission
+        /* if the permission is not available user will go to the screen to allow storage permission */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -116,12 +120,14 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    //this method is uploading the file
+    /* this method is uploading the file */
     private void uploadFile(Uri data) {
         progressBar.setVisibility(View.VISIBLE);
 
         final StorageReference ref = mStorageReference.child(Constants.STORAGE_PATH_UPLOADS + "/" +
                 idea_id + "/" + System.currentTimeMillis() + ".pdf");
+        final DocumentReference docRef = db.collection("Ideas").document(idea_id).collection("Documents").document();
+        docs_id = docRef.getId();
 
         UploadTask uploadTask = ref.putFile(data);
 
@@ -144,10 +150,8 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                     textViewStatus.setText("File Uploaded Successfully :)");
                     docs.put("name", editTextFilename.getText().toString());
                     docs.put("url", downloadUri.toString());
-//                    Upload upload = new Upload(editTextFilename.getText().toString(), downloadUri.toString());
-                    db.collection("Ideas").document(idea_id).collection("Documents").add(docs);
-                    //mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
-
+                    docs.put("docsID", docs_id);
+                    docRef.set(docs, SetOptions.merge());
                 } else {
                     // Handle failures
                     // ...
@@ -162,31 +166,6 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle unsuccessful uploads
-//                Toast.makeText(getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-//                // ...
-//                progressBar.setVisibility(View.GONE);
-//                textViewStatus.setText("File Uploaded Successfully");
-//
-//                Upload upload = new Upload(editTextFilename.getText().toString(), ref.getDownloadUrl().toString());
-//                mDatabaseReference.child(mDatabaseReference.push().getKey()).setValue(upload);
-//            }
-//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @SuppressWarnings("VisibleForTests")
-//            @Override
-//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-//                textViewStatus.setText((int) progress + "% Uploading...");
-//            }
-//        });
 
     }
 
@@ -204,4 +183,5 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
 }

@@ -167,7 +167,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     }
 
     public void manageDocument(View v) {
-        Intent i = new Intent(this, UploadFileActivity.class);
+        Intent i = new Intent(this, ViewUploadsActivity.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
         finish();

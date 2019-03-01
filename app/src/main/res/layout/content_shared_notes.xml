@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SharedNotesActivity"
+    tools:showIn="@layout/activity_shared_notes">
+
+
+    <TextView
+        android:id="@+id/tv_shared_notes_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="There are no notes shared for this idea."
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="10pt"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <ListView
+        android:visibility="invisible"
+        android:id="@+id/lv_shared_notes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.constraint.ConstraintLayout>

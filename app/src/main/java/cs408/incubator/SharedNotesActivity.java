@@ -64,7 +64,7 @@ public class SharedNotesActivity extends AppCompatActivity {
 
                             // display titles in list view
                             ArrayList<String> title_list = new ArrayList<String>(map_shared_notes.keySet());
-//                            ArrayList<String> val_list = new ArrayList<String>(map_shared_notes.values());
+                            final ArrayList<String> val_list = new ArrayList<String>(map_shared_notes.values());
 
                             // Start
 
@@ -88,7 +88,10 @@ public class SharedNotesActivity extends AppCompatActivity {
                                 public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                                     Object clickItemObj = adapterView.getAdapter().getItem(index);
                                     Map<String, Object> lim = (Map<String, Object>)clickItemObj;
-
+                                    Intent i = new Intent(getApplicationContext(), ViewNoteActivity.class);
+                                    i.putExtra("title", lim.get("title").toString());
+                                    i.putExtra("desc", val_list.get(index));
+                                    startActivity(i);
                                 }
                             });
 

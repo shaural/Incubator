@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -149,6 +150,15 @@ public class NotesActivity extends AppCompatActivity {
             startActivity(i);
         } else if(menuItemIndex == 1) {
             // Share
+            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> mitem = new HashMap<>();
+            // store owner as well
+            String newTitle = selected_title + "~" + USERNAME;
+            mitem.put(newTitle, selected_desc);
+            data.put("Shared", mitem);
+            docRef.set(data, SetOptions.merge());
+            String toastText = selected_title + " has been shared with the collaborators of this idea.";
+            Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
         } else if(menuItemIndex == 2) {
             // Delete
             Map<String, Object> data = new HashMap<>();

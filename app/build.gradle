@@ -47,6 +47,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:18.0.1'
     implementation 'com.google.code.gson:gson:2.8.2'
 
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

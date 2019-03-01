@@ -9,7 +9,7 @@ import java.util.Calendar
 
 val settings = FirebaseFirestoreSettings.Builder()
         .build()
-var USERNAME = ""
+var USERNAME = "test@test.com"
 
 fun updateUserName(name: String){
     USERNAME = name
@@ -39,14 +39,32 @@ fun addIdea(idea: Idea, callback: (String) -> Unit) {
                 println("Success" + it.id)
 
                 for (user in ideaCollabs) {
+                    val priList = ArrayList<String>()
+                    priList.add(ideaRef)
                     getDB().collection("Users").document(user)
-                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef),"Priority",FieldValue.arrayUnion(ideaRef))
+                            .update("Ideas_Owned", FieldValue.arrayUnion(ideaRef))
                             .addOnSuccessListener {
                                 println("Added ID to $user")
                             }
                             .addOnFailureListener {
                                 println("Fail! ID not added to User")
                             }
+                    getDB().collection("Users").document(user).get()
+                            .addOnSuccessListener {
+                                if(it["Priority"]!= null){
+                                    priList.addAll(it["Priority"] as Collection<String>)
+                                    getDB().collection("Users").document(user).update("Priority",priList)
+                                            .addOnSuccessListener {
+                                                println("Updated Priority")
+                                            }
+                                            .addOnFailureListener {
+                                                println("Fail!")
+                                            }
+                                }
+                            }
+
+
+
                 }
 
                 callback(ideaRef)
@@ -104,7 +122,7 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                         var temp = document.data["Name"].toString()
                         if (temp.toLowerCase().contains(query.toLowerCase())) {
                             // match
-                            searchIdeas.add("" +document.data["Name"] + "-"+document.id)
+                            searchIdeas.add("" +document.data["Name"] + "~"+document.id)
                         } else {
                             if(document.data["Tags"] != null) {
                                 val list = document.data["Tags"] as ArrayList<String>
@@ -112,7 +130,7 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                                 for (l in list) {
                                     if(l.toLowerCase().contains(query.toLowerCase())) {
                                         //tag matched
-                                        searchIdeas.add("" +document.data["Name"] + "-"+document.id)
+                                        searchIdeas.add("" +document.data["Name"] + "~"+document.id)
                                         break
                                     }
 
@@ -152,7 +170,7 @@ fun getIdeasByID(key: String, callback: (String) -> Unit) {
     getDB().collection("Ideas").document(key).get()
             .addOnSuccessListener { idea ->
 
-                val ideaInfo = "" + idea["Name"] + "-"+ key
+                val ideaInfo = "" + idea["Name"] + "~"+ key
 
                 callback(ideaInfo)
             }

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_add_idea.*
 
 class AddIdeaActivity : AppCompatActivity() {
 
-    private var verification:Boolean = false
+    public var verification:Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

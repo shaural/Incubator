@@ -74,7 +74,7 @@
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
             android:textSize="8pt"
-            android:hint="No description provided"/>
+            android:hint="No description provided."/>
 
         <EditText
             android:id="@+id/descriptionText1"
@@ -126,7 +126,7 @@
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
             android:textSize="8pt"
-            android:hint="Tags for this idea"/>
+            android:hint="No tags provided."/>
 
         <LinearLayout
             android:orientation="horizontal"

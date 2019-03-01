@@ -28,7 +28,7 @@ import android.view.MenuItem
 class MainIdeasActivity : AppCompatActivity() {
     val REQ_CODE = 1
     var count = (0).toLong()
-    private lateinit var ideaInfoList: LinkedHashMap<String,String>
+    lateinit var ideaInfoList: LinkedHashMap<String,String>
     private lateinit var ideaByPrio: ArrayList<String>
     private lateinit var mDragList: DragListView
     private lateinit var ideaArray: ArrayList<Pair<Long,String>>
@@ -63,7 +63,7 @@ class MainIdeasActivity : AppCompatActivity() {
                     /**
                      * This will get you a list of Pair(Long, String).
                      * The order will be the "Priority" order
-                     * All strings will be of the form "Idea Name"-"Idea ID"
+                     * All strings will be of the form "Idea Name"~"Idea ID"
                      */
                     //println(mDragList.adapter.itemList.toString())
                     Toast.makeText(applicationContext, "End - position: $toPosition", Toast.LENGTH_SHORT).show()
@@ -73,7 +73,7 @@ class MainIdeasActivity : AppCompatActivity() {
                     for (item in list) {
 //                        setPriority(item.second.toString()
 //                                .substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
-                        newList.add(item.second.toString().substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
+                        newList.add(item.second.toString().substring(item.second.toString().indexOf('~')+1,item.second.toString().length))
                     }
                     setPriority(newList)
                 }
@@ -159,14 +159,14 @@ class MainIdeasActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun addToIdeaList(ideaInfo : String){
-        val ideaVals = ideaInfo.split("-")
+        val ideaVals = ideaInfo.split("~")
         ideaInfoList.replace(ideaVals[1],ideaVals[0])
         count--
         if(count == 0.toLong()){
             println(ideaInfoList.toString())
             var counter = 0
             for(i in ideaInfoList.entries){
-                val title = i.value+"-"+i.key
+                val title = i.value+"~"+i.key
                 ideaArray.add(Pair(counter.toLong(),title))
                 counter++
             }
@@ -192,15 +192,16 @@ class MainIdeasActivity : AppCompatActivity() {
                 val v: Long = (ideaArray.size + 1).toLong()
 
                 val newArray = ArrayList<Pair<Long,String>>()
-                newArray.add(Pair(v,"$ideaTitle-$ideaID"))
+                newArray.add(Pair(v,"$ideaTitle~$ideaID"))
                 newArray.addAll(ideaArray)
 
+                ideaInfoList.put(ideaID!!, ideaTitle!!)
 
                 mDragList.setLayoutManager(LinearLayoutManager(applicationContext))
                 val listAdapter = IdeaItemAdapter(newArray,R.layout.idea_item,true)
                 mDragList.setAdapter(listAdapter,true)
                 mDragList.setCanDragHorizontally(false)
-                ideaArray.add(Pair(v,"$ideaTitle-$ideaID"))
+                ideaArray.add(Pair(v,"$ideaTitle~$ideaID"))
             }
             else if(resultCode == -1){
                 Toast.makeText(applicationContext,"No idea added",Toast.LENGTH_SHORT).show()

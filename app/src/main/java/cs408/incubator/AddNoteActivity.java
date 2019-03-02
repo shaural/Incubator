@@ -152,7 +152,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
             case android.R.id.home:
                 Intent intent =  new Intent(this, NotesActivity.class);
-                intent.putExtra("ideaID",idea_id);
+                intent.putExtra("ideaID", idea_id);
                 startActivity(intent);
                 finish();
                 return true;

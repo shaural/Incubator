@@ -55,8 +55,8 @@
     <string name="welcome_msg1">Enter your Display Name to continue</string>
     <string name="welcome_msg2">Welcome to Incubator!</string>
     <string name="title_activity_notes">Notes</string>
-    <string name="title_activity_add_note">AddNoteActivity</string>
-    <string name="title_activity_shared_notes">SharedNotesActivity</string>
-    <string name="title_activity_view_note">ViewNoteActivity</string>
+    <string name="title_activity_add_note">Note</string>
+    <string name="title_activity_shared_notes">Shared Notes</string>
+    <string name="title_activity_view_note">Note</string>
 
 </resources>

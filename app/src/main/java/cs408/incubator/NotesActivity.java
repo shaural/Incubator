@@ -148,6 +148,7 @@ public class NotesActivity extends AppCompatActivity {
             i.putExtra("new_note", false);
             i.putExtra("title", selected_title);
             i.putExtra("desc", selected_desc);
+            finish();
             startActivity(i);
         } else if(menuItemIndex == 1) {
             // Share

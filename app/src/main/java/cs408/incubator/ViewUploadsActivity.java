@@ -128,7 +128,7 @@ public class ViewUploadsActivity extends AppCompatActivity {
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ViewUploadsActivity.this);
-                builder.setMessage("Delete this Tag?")
+                builder.setMessage("Delete this Document?")
                         .setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
                 return true;

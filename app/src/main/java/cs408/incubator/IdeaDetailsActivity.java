@@ -80,7 +80,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,"IDEA ID :  " + tag);
-                manageImages();
+                manageImages_list();
 
             }
         });
@@ -506,7 +506,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         Intent i = new Intent(this, image_list.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
-        //finish();
+        finish();
     }
 
 

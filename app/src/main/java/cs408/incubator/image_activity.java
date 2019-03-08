@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -59,6 +62,12 @@ public class image_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+
+        Toolbar toolbar = findViewById(R.id.imageToolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
         mButtonChooseImage = findViewById(R.id.button_choose_image);
         mButtonUpload = findViewById(R.id.button_upload);
@@ -187,6 +196,8 @@ public class image_activity extends AppCompatActivity {
                                         }
                                     });
                             Log.d(TAG, "Document ID: " + String.valueOf(System.currentTimeMillis()));
+
+                            openImagesActivity();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -210,6 +221,22 @@ public class image_activity extends AppCompatActivity {
 
     private void openImagesActivity() {
         Intent intent = new Intent(this, image_list.class);
+        intent.putExtra("ideaID",getIntent().getStringExtra("ideaID"));
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                Intent i = new Intent(this, image_list.class);
+                i.putExtra("ideaID",getIntent().getStringExtra("ideaID"));
+                startActivity(i);
+                finish();
+                break;
+        }
+        return true;
     }
 }

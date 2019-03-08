@@ -10,7 +10,7 @@
 
     <android.support.v7.widget.Toolbar
         app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/tagToolbar"
+        android:id="@+id/imageToolbar"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"

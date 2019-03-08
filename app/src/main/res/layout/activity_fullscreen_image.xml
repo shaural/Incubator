@@ -6,7 +6,7 @@
     tools:context=".FullscreenImageActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/ideaDetailToolbar"
+        android:id="@+id/fullscreenToolbar"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -19,5 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_below="@id/ideaDetailToolbar" />
+        android:layout_below="@id/fullscreenToolbar" />
+
 </RelativeLayout>

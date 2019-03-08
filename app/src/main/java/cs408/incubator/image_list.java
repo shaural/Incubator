@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.renderscript.Type;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
@@ -57,6 +60,12 @@ import java.util.List;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_image_list);
 
+            Toolbar toolbar = findViewById(R.id.showImagesToolbar);
+            setSupportActionBar(toolbar);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+
             mRecyclerView = findViewById(R.id.recycler_view);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -97,29 +106,7 @@ import java.util.List;
                 }
             });
 
-            /*mDatabaseRef = FirebaseDatabase.getInstance().getReference("images");
-            mDatabaseRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        uploadImage upload = postSnapshot.getValue(uploadImage.class);
-                        mUploads.add(upload);
-                    }
 
-                   // mAdapter = new Image_list_adapter(image_list.this, mUploads);
-
-                    //mRecyclerView.setAdapter(mAdapter);
-                    //mProgressCircle.setVisibility(View.INVISIBLE);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(image_list.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                    mProgressCircle.setVisibility(View.INVISIBLE);
-                }
-
-
-            });*/
         }
 
         public void manageImages_fullscreen() {
@@ -145,7 +132,7 @@ import java.util.List;
             //startActivity(i);
 
             Intent i = new Intent(this, FullscreenImageActivity.class);
-            // i.putExtra("ideaID",tag);
+            i.putExtra("ideaID",getIntent().getStringExtra("ideaID"));
             uploadImage u = new uploadImage();
             ur = mUploads.get(k).mImageUrl;
             Log.d(TAG,"image url @mageimage_fullscreen " + ur);
@@ -210,7 +197,7 @@ import java.util.List;
                         //making sure the data got delete from both db and storage
                         public void onSuccess(Void aVoid) {
                             db.collection("images").document(selectedKey).delete();
-                            Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT);
+                            Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT).show();
                         }
                     });
                     onRestart();
@@ -250,6 +237,26 @@ import java.util.List;
 
         }
 
+        public void addImage(View v){
+            Intent i = new Intent(this,image_activity.class);
+            i.putExtra("ideaID",getIntent().getStringExtra("ideaID"));
+            startActivity(i);
+            finish();
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+
+                case android.R.id.home:
+                    Intent i = new Intent(this, IdeaDetailsActivity.class);
+                    i.putExtra("ideaTag",getIntent().getStringExtra("ideaID"));
+                    startActivity(i);
+                    finish();
+                    break;
+            }
+            return true;
+        }
        // recreate();
     }
 

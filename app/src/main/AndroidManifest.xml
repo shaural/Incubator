@@ -73,6 +73,8 @@
             android:name=".Tags"
             android:label="Tags"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver android:name=".NotificationPublisher"/>
     </application>
 
 </manifest>

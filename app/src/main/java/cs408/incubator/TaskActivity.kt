@@ -1,8 +1,16 @@
 package cs408.incubator
 
+import android.app.AlarmManager
+import android.app.DatePickerDialog
+import android.app.Notification
+import android.app.PendingIntent
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
+import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -21,6 +29,7 @@ import cs408.incubator.DTO.INTENT_TODO_ID
 import cs408.incubator.DTO.INTENT_TODO_NAME
 import cs408.incubator.DTO.ToDoItem
 import firestore_library.USERNAME
+import java.text.SimpleDateFormat
 
 import kotlin.collections.ArrayList
 
@@ -56,25 +65,56 @@ class TaskActivity : AppCompatActivity() {
         readTasks()
 
         fab_item.setOnClickListener {
+            var cal = Calendar.getInstance()
             val dialog = AlertDialog.Builder(this)
             dialog.setTitle("Add ToDo Item")
             val view = layoutInflater.inflate(R.layout.dialog_dashboard, null)
             val toDoName = view.findViewById<EditText>(R.id.ev_todo)
+            val deadline = view.findViewById<EditText>(R.id.deadline)
+            deadline.setOnClickListener {
+                val current = cal.timeInMillis
+                val listener = DatePickerDialog.OnDateSetListener { datePicker, y, m, d ->
+                    cal.set(Calendar.YEAR,y)
+                    cal.set(Calendar.MONTH,m)
+                    cal.set(Calendar.DAY_OF_MONTH,d)
+
+                    if(cal.timeInMillis < current){
+                        Toast.makeText(this,"Deadline cannot be set!",Toast.LENGTH_SHORT).show()
+                        cal = Calendar.getInstance()
+                    }
+                    else {
+                        val format = "MMM d, yyyy"
+                        val sdf = SimpleDateFormat(format, Locale.US)
+                        deadline.setText(sdf.format(cal.time))
+                    }
+                }
+                DatePickerDialog(this,listener,cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)).show()
+            }
+
             dialog.setView(view)
             dialog.setPositiveButton("Add") { _: DialogInterface, _: Int ->
                 if (toDoName.text.isNotEmpty()) {
-                    val item = ToDoItem()
-                    item.itemName = toDoName.text.toString()
-                    //add to firebase
-                    // Access a Cloud Firestore instance from your Activity
-                    val db = FirebaseFirestore.getInstance()
-                    val docRef = db.collection("Ideas").document(IDEA_ID)
-                    docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
-                    docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "add", "task", toDoName.text.toString())))
-                    item.toDoId = todoId
-                    item.isCompleted = false
-                   // dbHandler.addToDoItem(item)
-                    readTasks()
+
+                    if(deadline.text.isNullOrEmpty()) {
+                        val item = ToDoItem()
+                        item.itemName = toDoName.text.toString()
+                        //add to firebase
+                        // Access a Cloud Firestore instance from your Activity
+                        val db = FirebaseFirestore.getInstance()
+                        val docRef = db.collection("Ideas").document(IDEA_ID)
+                        docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
+                        docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "add", "task", toDoName.text.toString())))
+                        item.toDoId = todoId
+                        item.isCompleted = false
+                        // dbHandler.addToDoItem(item)
+                        readTasks()
+                    }
+                    else {
+                        addTask(toDoName.text.toString(),deadline.text.toString(),cal.timeInMillis)
+                    }
+                }
+                else {
+                    Toast.makeText(this,"Task cannot be empty!",Toast.LENGTH_SHORT).show()
                 }
             }
             dialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
@@ -136,6 +176,49 @@ class TaskActivity : AppCompatActivity() {
 
         }
         dialog.show()
+    }
+
+    fun addTask(name : String, deadline: String, delay: Long) {
+
+        val notification = getNotification(name)
+        val cur = SystemClock.elapsedRealtime()
+        val notif = Intent(this,NotificationPublisher::class.java).apply {
+            putExtra("notification",notification)
+            putExtra("notification-id",cur)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(this,0,notif,PendingIntent.FLAG_UPDATE_CURRENT)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(AlarmManager.RTC,delay,pendingIntent)
+
+        val item = ToDoItem()
+        item.itemName = name
+        val notifData = "$name~$cur~$deadline"
+        //add to firebase
+        // Access a Cloud Firestore instance from your Activity
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection("Ideas").document(IDEA_ID)
+        docRef.update("Tasks", FieldValue.arrayUnion(notifData))
+        docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "add", "task", notifData)))
+        item.toDoId = todoId
+        item.isCompleted = false
+        // dbHandler.addToDoItem(item)
+        readTasks()
+
+
+
+    }
+
+    fun getNotification(content : String):Notification {
+        val builder = NotificationCompat.Builder(this,"INCUBATOR")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("Deadline Coming up")
+                .setContentText(content)
+                .setPriority(NotificationManagerCompat.IMPORTANCE_DEFAULT)
+
+        return builder.build()
+
+
     }
 
     override fun onResume() {
@@ -258,7 +341,14 @@ class TaskActivity : AppCompatActivity() {
                 println("Got the tasks " + tasks.toString())
                 for (task in tasks) {
                     val item = ToDoItem()
-                    item.itemName = task
+                    if(task.contains("~")){
+                        val parts = task.split("~")
+                        item.itemName = parts[0]
+                    }
+                    else {
+                        item.itemName = task
+                    }
+
                     item.isCompleted = false
                     item.toDoId = todoId
                     taskList.add(item)

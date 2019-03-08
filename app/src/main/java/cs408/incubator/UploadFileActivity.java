@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,11 +39,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import firestore_library.FirestoreLibraryKt;
+
 public class UploadFileActivity extends AppCompatActivity implements View.OnClickListener {
 
     //this is the pic pdf code used in file chooser
     final static int PICK_PDF_CODE = 2342;
-
+    String USERNAME = FirestoreLibraryKt.getUSERNAME();
     //these are the views
     TextView textViewStatus;
     EditText editTextFilename;
@@ -167,6 +170,9 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                     docs.put("url", downloadUri.toString());
                     docs.put("docsID", docs_id);
                     docRef.set(docs, SetOptions.merge());
+                    db.collection("Ideas").document(idea_id)
+                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "uploaded", "document", docs.get("name").toString())));
+                    findViewById(R.id.textViewUploads).performClick();
                 } else {
                     // Handle failures
                     // ...

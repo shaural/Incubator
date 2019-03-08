@@ -495,14 +495,16 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         finish();
     }
 
-    public void manageImages() {
-        Intent i = new Intent(this, image_activity.class);
-        i.putExtra("ideaID", tag);
-        Log.d(TAG, "IDEA ID :  " + tag);
-    }
 
     public void manageDocument(View v) {
         Intent i = new Intent(this, ViewUploadsActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
+    public void personalNotes(View v) {
+        Intent i = new Intent(this, NotesActivity.class);
         i.putExtra("ideaID",tag);
         startActivity(i);
         finish();
@@ -513,8 +515,14 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         i.putExtra("ideaID",tag);
         startActivity(i);
         finish();
-    }
 
+    }
+    public void sharedNotes(View v) {
+        Intent i = new Intent(this, SharedNotesActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

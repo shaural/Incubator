@@ -55,4 +55,8 @@
     <string name="welcome_msg1">Enter your Display Name to continue</string>
     <string name="welcome_msg2">Welcome to Incubator!</string>
 
+    <string name="hint_message_text">Type a message&#8230;</string>
+    <string name="error_empty_message">Please enter a message</string>
+    <string name="error_message_failed">Failed to send your message</string>
+
 </resources>

@@ -26,15 +26,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             />
 
-        <TextView
-            android:id="@+id/ideaName"
-            android:textSize="14pt"
-            android:hint="@string/title"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -45,10 +37,21 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/ideaName"
+                android:textSize="14pt"
+                android:hint="@string/title"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10pt"
-                android:text="@string/desc"/>
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/editIdeaName"
+                android:visibility="gone"
+                android:textSize="14pt"
+                android:hint="@string/title"
+                android:textStyle="bold"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"/>
 
             <View
                 android:layout_width="0dp"
@@ -67,6 +70,15 @@
         </LinearLayout>
 
         <TextView
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:text="@string/desc"/>
+
+        <TextView
             android:id="@+id/detailDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +86,7 @@
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
             android:textSize="8pt"
-            android:hint="No description provided"/>
+            android:hint="No description provided."/>
 
         <EditText
             android:id="@+id/descriptionText1"
@@ -126,7 +138,7 @@
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
             android:textSize="8pt"
-            android:hint="Tags for this idea"/>
+            android:hint="No tags provided."/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -149,6 +161,7 @@
 
             <ImageButton
                 android:id="@+id/collabButton"
+                android:onClick="manageCollabs"
                 android:src="@drawable/ic_add"
                 android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
@@ -157,15 +170,24 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/collaboratorText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/collabView"
+            android:orientation="vertical"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="5dp"
-            android:textSize="8pt"
-            android:hint="Collaborators"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/collaboratorText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="8pt"
+                android:hint="Collaborators"/>
+
+        </LinearLayout>
+
 
 
         </LinearLayout>

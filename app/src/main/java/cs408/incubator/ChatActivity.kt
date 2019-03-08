@@ -1,5 +1,6 @@
 package cs408.incubator
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -16,20 +17,26 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 
 class ChatActivity: AppCompatActivity(){
     private var rootRef: FirebaseFirestore? = null
-    val user = intent.extras.get("userID").toString()
+    var user = ""
+    var lastuser = ""
     private var adapter: MessageAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mainchat)
-
+        user = intent.getStringExtra("userID")
         rootRef = FirebaseFirestore.getInstance()
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(chatToolbar)
+        val actionbarEvent = supportActionBar
+        actionbarEvent?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_back)
+        }
 
 
-        val docP = intent.extras.get("ideaID").toString()
-        val name = intent.extras.get("nametitle").toString()
+        val docP = intent.getStringExtra("ideaID")
+        val name = intent.getStringExtra("nametitle")
 
         button.setOnClickListener {
             val messageText = edit_text.text.toString()
@@ -48,10 +55,21 @@ class ChatActivity: AppCompatActivity(){
 
     }
 
-    inner class MessageViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
+    inner class MessageViewHolder internal constructor(private val view: View, private val condition: Int) : RecyclerView.ViewHolder(view) {
         internal fun setMessage(message: Message){
             val textView = view.findViewById<TextView>(R.id.chat_message)
             textView.text = message.messageText
+            if(condition == 2){
+                if(lastuser == message.fromUser){
+                    view.findViewById<TextView>(R.id.userMessage).visibility = View.GONE
+                }else {
+
+                    val userView = view.findViewById<TextView>(R.id.userMessage)
+                    userView.text = message.fromUser
+                    lastuser = message.fromUser
+                }
+            }
+
         }
     }
 
@@ -59,10 +77,10 @@ class ChatActivity: AppCompatActivity(){
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
             return if (viewType == R.layout.item_chat_sent){
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_sent, parent, false)
-                MessageViewHolder(view)
+                MessageViewHolder(view,1)
             } else {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_received, parent, false)
-                MessageViewHolder(view)
+                MessageViewHolder(view,2)
             }
         }
 
@@ -98,6 +116,19 @@ class ChatActivity: AppCompatActivity(){
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return super.onOptionsItemSelected(item)
+        if (item != null) {
+            return when(item.itemId){
+                android.R.id.home -> {
+                    val intent = Intent(this,IdeaDetailsActivity::class.java).apply {
+                        putExtra("ideaTag",intent.getStringExtra("ideaID"))
+                    }
+                    finish()
+                    startActivity(intent)
+                    true
+                }
+                else -> super.onOptionsItemSelected(item)
+            }
+        }
+        return true
     }
 }

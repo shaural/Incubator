@@ -301,6 +301,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         finish();
     }
 
+
     public void manageCollabs(View v){
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_collab,null);
         AlertDialog.Builder builder = new AlertDialog.Builder(IdeaDetailsActivity.this);
@@ -496,8 +497,13 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
     public void manageImages() {
         Intent i = new Intent(this, image_activity.class);
+        i.putExtra("ideaID", tag);
+        Log.d(TAG, "IDEA ID :  " + tag);
+    }
+
+    public void manageDocument(View v) {
+        Intent i = new Intent(this, ViewUploadsActivity.class);
         i.putExtra("ideaID",tag);
-        Log.d(TAG,"IDEA ID :  " + tag);
         startActivity(i);
         finish();
     }

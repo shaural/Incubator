@@ -233,7 +233,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
-        android:text="Show Images"
+        android:text="Images"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -246,6 +246,17 @@
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
         android:text="Tasks"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/documentButton"
+        android:onClick="manageDocument"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@color/colorPrimary"
+        android:text="Documents"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

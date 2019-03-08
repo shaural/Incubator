@@ -3,10 +3,12 @@ package cs408.incubator;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -106,9 +108,10 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
 
         //creating an intent for file chooser
         Intent intent = new Intent();
-        intent.setType("application/pdf");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select PDF"), PICK_PDF_CODE);
+        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_PDF_CODE);
     }
 
 
@@ -121,7 +124,15 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
             if (data.getData() != null) {
                 //uploading the file
                 Uri uri = data.getData();
+
+                Cursor cursor = getContentResolver().query(uri,null,null,null,null);
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                cursor.moveToFirst();
+                if(editTextFilename.getText().toString().isEmpty())
+                    editTextFilename.setText(cursor.getString(nameIndex));
+
                 uploadFile(uri);
+
             }else{
                 Toast.makeText(this, "No file chosen", Toast.LENGTH_SHORT).show();
             }

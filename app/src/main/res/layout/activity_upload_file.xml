@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:layout_below="@id/editTextFileName"
-        android:text="Upload PDF" />
+        android:text="Upload File" />
 
     <LinearLayout
         android:layout_width="match_parent"

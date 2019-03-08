@@ -340,43 +340,48 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
     public void checkCollaborator(String s){
         final String newUser = s;
-        getDB().collection("Users").document(newUser)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists()){
-                                getDB().collection("Users").document(newUser)
-                                        .update("Ideas_Owned",FieldValue.arrayUnion(tag),
-                                                "Priority",FieldValue.arrayUnion(tag));
+        TextView t = findViewById(R.id.collaboratorText);
+        if(t.getText().toString().contains(s)){
+            Toast.makeText(getApplicationContext(),"Collaborator already exists",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            getDB().collection("Users").document(newUser)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    getDB().collection("Users").document(newUser)
+                                            .update("Ideas_Owned", FieldValue.arrayUnion(tag),
+                                                    "Priority", FieldValue.arrayUnion(tag));
 
-                                getDB().collection("Ideas").document(tag)
-                                        .update("Collaborators",FieldValue.arrayUnion(newUser))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                getDB().collection("Ideas").document(tag)
-                                                        .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
-                                                                "collaborator",newUser)));
+                                    getDB().collection("Ideas").document(tag)
+                                            .update("Collaborators", FieldValue.arrayUnion(newUser))
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    getDB().collection("Ideas").document(tag)
+                                                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
+                                                                    "collaborator", newUser)));
 
-                                                addCollabUI(newUser);
+                                                    addCollabUI(newUser);
 
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                            }
-                                        });
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(),"User Not Found",Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                }
+                                            });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "User Not Found", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }
 
 
     }

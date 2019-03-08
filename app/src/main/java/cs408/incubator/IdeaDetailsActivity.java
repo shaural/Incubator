@@ -1,18 +1,22 @@
 package cs408.incubator;
 
 import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -40,8 +44,11 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     String USERNAME = FirestoreLibraryKt.getUSERNAME();
 
     EditText descTV;
-    String tag;
     String idea_owner;
+
+    static String tag;
+    private static final String TAG = "IdeaDetailsActivity";
+    //private Button addimagebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +66,33 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         //descTV = findViewById(R.id.descriptionText1);
         //stDesc = getIntent().getExtras().getString("Desc");
         //descTV.setText("test");
+        /**ImageButton addimagebutton =findViewById(R.id.picButton);
+        addimagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"IDEA ID :  " + tag);
+                manageImages();
+            }
+        });*/
+
+        Button showimagebutton = findViewById(R.id.show_image_button);
+        showimagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"IDEA ID :  " + tag);
+                manageImages();
+
+            }
+        });
 
         Intent i = getIntent();
         final String ideaTag = i.getStringExtra("ideaTag");
         tag = ideaTag;
-
         DocumentReference docRef = db.collection("Ideas").document(ideaTag);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
@@ -77,6 +102,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                         TextView tags = findViewById(R.id.tagText);
                         TextView collab = findViewById(R.id.collaboratorText);
                         LinearLayout collabView = findViewById(R.id.collabView);
+                       // TextView addimage = findViewById(R.id.)
 
                         title.setText(document.getString("Name"));
                         desc.setText(document.getString("Description"));
@@ -467,6 +493,22 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         startActivity(j);
         finish();
     }
+
+    public void manageImages() {
+        Intent i = new Intent(this, image_activity.class);
+        i.putExtra("ideaID",tag);
+        Log.d(TAG,"IDEA ID :  " + tag);
+        startActivity(i);
+        finish();
+    }
+
+    public void manageImages_list() {
+        Intent i = new Intent(this, image_list.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        //finish();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

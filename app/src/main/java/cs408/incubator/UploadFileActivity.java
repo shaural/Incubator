@@ -32,7 +32,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UploadFileActivity extends AppCompatActivity implements View.OnClickListener {
@@ -63,6 +66,9 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
 
         Toolbar toolbar = findViewById(R.id.upload_toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
 
         Intent i = getIntent();
@@ -148,7 +154,16 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                     Uri downloadUri = task.getResult();
                     progressBar.setVisibility(View.GONE);
                     textViewStatus.setText("File Uploaded Successfully :)");
-                    docs.put("name", editTextFilename.getText().toString());
+                    if(!editTextFilename.getText().toString().isEmpty())
+                        docs.put("name", editTextFilename.getText().toString());
+                    else{
+                        Date d = new Date();
+                        String format = "MMM d, YYY";
+                        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.US);
+                        String ts = sdf.format(d);
+                        String n = "Document (" + ts +")";
+                        docs.put("name",n);
+                    }
                     docs.put("url", downloadUri.toString());
                     docs.put("docsID", docs_id);
                     docRef.set(docs, SetOptions.merge());
@@ -182,6 +197,18 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent i = new Intent(this, ViewUploadsActivity.class);
+                i.putExtra("ideaID",idea_id);
+                startActivity(i);
+                finish();
+        }
+        return true;
     }
 
 }

@@ -229,11 +229,22 @@
 
     <Button
         android:id="@+id/show_image_button"
+        android:text="Images"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
-        android:text="Images"
+        android:layout_gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <Button
+        android:text="Chat"
+        android:onClick="manageChat"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorPrimary"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -242,7 +253,7 @@
         android:id="@+id/taskButton"
         android:onClick="manageTasks"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
         android:text="Tasks"
@@ -254,7 +265,7 @@
         android:id="@+id/documentButton"
         android:onClick="manageDocument"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="8dp"
         android:text="Documents"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
@@ -270,7 +281,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"/>
 
@@ -278,7 +289,7 @@
         android:id="@+id/sharedNotesButton"
         android:onClick="sharedNotes"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="15dp"
         android:background="@color/colorPrimary"
         android:text="Shared Notes"

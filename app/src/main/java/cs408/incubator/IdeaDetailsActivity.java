@@ -49,6 +49,8 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     static String tag;
     private static final String TAG = "IdeaDetailsActivity";
     //private Button addimagebutton;
+    String nametitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         TextView title = findViewById(R.id.ideaName);
+                        nametitle = findViewById(R.id.ideaName).toString();
                         TextView desc = findViewById(R.id.detailDesc);
                         EditText editableDesc = findViewById(R.id.descriptionText1);
                         TextView tags = findViewById(R.id.tagText);
@@ -285,6 +288,16 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(),"Saved Changes",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void manageChat(View v){
+
+        Intent i = new Intent(this, ChatActivity.class);
+        i.putExtra("ideaID",tag);
+        i.putExtra("userID",USERNAME);
+        i.putExtra("nametitle",nametitle);
+        startActivity(i);
+        finish();
     }
 
     public void manageTags(View v) {

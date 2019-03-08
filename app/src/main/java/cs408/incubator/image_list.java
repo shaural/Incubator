@@ -198,9 +198,11 @@ import java.util.List;
                         public void onSuccess(Void aVoid) {
                             db.collection("images").document(selectedKey).delete();
                             Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT).show();
+                            finish();
+                            startActivity(getIntent());
                         }
                     });
-                    onRestart();
+                    //onRestart();
                     dialogInterface.dismiss();
 
                     //onResume();

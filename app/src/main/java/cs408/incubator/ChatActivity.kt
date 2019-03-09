@@ -15,7 +15,7 @@ import android.view.*
 import android.widget.TextView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 
-class ChatActivity: AppCompatActivity(){
+class ChatActivity: AppCompatActivity() {
     private var rootRef: FirebaseFirestore? = null
     var user = ""
     var lastuser = ""

@@ -40,6 +40,12 @@
         </activity>
 
         <activity
+            android:name=".ChatActivity"
+            android:label="Chat">
+
+        </activity>
+
+        <activity
             android:name=".MainIdeasActivity"
             android:label="@string/title_activity_main_ideas"
             android:theme="@style/AppTheme.NoActionBar">

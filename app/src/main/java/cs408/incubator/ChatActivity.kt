@@ -29,6 +29,8 @@ class ChatActivity: AppCompatActivity(){
 
 
         val docP = intent.extras.get("ideaID").toString()
+        //val docP = "1D6sOf0d5sFxtTpXbg0q"
+        //val docP = "1gYMO1eBFmTUsTW9YSwN"
         val name = intent.extras.get("nametitle").toString()
 
         button.setOnClickListener {

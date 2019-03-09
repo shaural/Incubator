@@ -159,6 +159,8 @@ public class NotesActivity extends AppCompatActivity {
             mitem.put(newTitle, selected_desc);
             data.put("Shared", mitem);
             docRef.set(data, SetOptions.merge());
+            final DocumentReference docRef2 = db.collection("Ideas").document(idea_id);
+            docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "share", "note", newTitle)));
             String toastText = selected_title + " has been shared with the collaborators of this idea.";
             Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
         } else if(menuItemIndex == 2) {

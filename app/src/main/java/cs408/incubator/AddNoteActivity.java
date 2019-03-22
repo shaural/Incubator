@@ -33,12 +33,9 @@ import firestore_library.FirestoreLibraryKt;
 public class AddNoteActivity extends AppCompatActivity {
     String idea_id = "";
         String USERNAME = FirestoreLibraryKt.getUSERNAME();
-//    String USERNAME = "shaural@live.com";
     Boolean new_note = true;
     EditText tv_title = null;
     EditText tv_desc = null;
-    String old_title = "";
-    String old_desc = "";
     List<String> title_list = null;
 
 
@@ -61,8 +58,6 @@ public class AddNoteActivity extends AppCompatActivity {
             String des = i.getStringExtra("desc");
             tv_title.setText(tit);
             tv_desc.setText(des);
-            old_title = tit;
-            old_desc = des;
         }
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -111,29 +106,9 @@ public class AddNoteActivity extends AppCompatActivity {
                 }
 
                 // check if title is unique
-                if((!title.equals(old_title)) && title_list != null && title_list.contains(title)) {
+                if(title_list != null && title_list.contains(title)) {
                     Toast.makeText(this, "Must have a unique title.", Toast.LENGTH_SHORT).show();
                     return super.onOptionsItemSelected(item);
-                }
-
-                // check if content changed
-                if (title.equals(old_title) && desc.equals(old_desc)) {
-                    // title and desc are the same
-//                    NavUtils.navigateUpFromSameTask(this);
-                    Intent i = new Intent(getApplicationContext(), NotesActivity.class);
-                    i.putExtra("ideaID", idea_id);
-                    startActivity(i);
-                    finish();
-                    return true;
-                } else {
-                    // delete old
-                    if(!new_note) {
-                        Map<String, Object> data = new HashMap<>();
-                        Map<String, Object> mitem = new HashMap<>();
-                        mitem.put(old_title, FieldValue.delete());
-                        data.put(USERNAME, mitem);
-                        docRef.set(data, SetOptions.merge());
-                    }
                 }
 
 
@@ -142,7 +117,6 @@ public class AddNoteActivity extends AppCompatActivity {
                 mitem.put(title, desc);
                 data.put(USERNAME, mitem);
                 docRef.set(data, SetOptions.merge());
-//                NavUtils.navigateUpFromSameTask(this);
                 Intent i = new Intent(getApplicationContext(), NotesActivity.class);
                 i.putExtra("ideaID", idea_id);
                 startActivity(i);

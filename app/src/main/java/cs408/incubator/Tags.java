@@ -54,7 +54,6 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Ideas").document(idea_id);
@@ -92,8 +91,6 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
                                         docRef.update("Tags", FieldValue.arrayRemove(selected_tag));
                                         docRef.update("Tags", FieldValue.arrayUnion(m_Text));
                                         docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "update", "tag", m_Text)));
-                                        finish();
-                                        startActivity(getIntent());
                                     } else {
                                         dialog.cancel();
                                         Toast.makeText(Tags.this, "Tag cannot be empty.", Toast.LENGTH_SHORT).show();
@@ -157,8 +154,6 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
             docRef.update("Tags", FieldValue.arrayUnion(et_tag.getText().toString().trim()));
             docRef.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "add", "tag", et_tag.getText().toString().trim())));
             Toast.makeText(this, "Tag has been added to Idea.", Toast.LENGTH_LONG).show();
-            finish();
-            startActivity(getIntent());
         } else {
             Toast.makeText(this, "Tag cannot be empty.", Toast.LENGTH_SHORT).show();
         }

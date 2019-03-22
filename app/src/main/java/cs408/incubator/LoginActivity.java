@@ -142,14 +142,8 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     updateUserName(email);
                                     APPUSER = email;
-                                    boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
                                     Intent intent;
-                                    if(isNew) {
-                                        intent = new Intent(LoginActivity.this, ProfileActivity.class);
-                                    } else {
-                                        intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
-                                    }
-
+                                    intent = new Intent(LoginActivity.this, MainIdeasActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }

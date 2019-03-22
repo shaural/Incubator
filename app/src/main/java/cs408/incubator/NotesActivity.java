@@ -86,13 +86,9 @@ public class NotesActivity extends AppCompatActivity {
                             notes_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 // argument position gives the index of item which is clicked
                                 public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
-                                    final String selected_title = title_list.get(position);
-                                    final String selected_desc = val_list.get(position);
                                     Intent i = new Intent(getApplicationContext(), AddNoteActivity.class);
                                     i.putExtra("ideaID", idea_id);
                                     i.putExtra("new_note", false);
-                                    i.putExtra("title", selected_title);
-                                    i.putExtra("desc", selected_desc);
                                     startActivity(i);
                                 }
                             });

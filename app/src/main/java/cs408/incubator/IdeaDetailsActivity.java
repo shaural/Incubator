@@ -477,14 +477,13 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                                 if (owner.equals(USERNAME)) {
                                     ideaCollabs.remove(USERNAME);
                                     getDB().collection("Ideas").document(tag)
-                                            .update("Collaborators", FieldValue.arrayRemove(USERNAME), "Owner", ideaCollabs.get(0))
+                                            .update("Collaborators", FieldValue.arrayRemove(USERNAME))
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     getDB().collection("Ideas").document(tag)
-                                                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "delete", "idea", USERNAME)),
-                                                                    "Log", FieldValue.arrayUnion(LogKt.genLogStr("Owner", "changed",
-                                                                            "to", ideaCollabs.get(0))));
+                                                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "delete", "idea", USERNAME))
+                                                                    );
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {

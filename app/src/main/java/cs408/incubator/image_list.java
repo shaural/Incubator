@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -39,8 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import firestore_library.FirestoreLibraryKt;
 
-    public class image_list extends AppCompatActivity implements Image_list_adapter.OnItemClickListener {
+
+public class image_list extends AppCompatActivity implements Image_list_adapter.OnItemClickListener {
         private RecyclerView mRecyclerView;
         private Image_list_adapter mAdapter;
         private Task mDBListener;
@@ -179,6 +183,9 @@ import java.util.List;
                         //making sure the data got delete from both db and storage
                         public void onSuccess(Void aVoid) {
                             db.collection("images").document(selectedKey).delete();
+                            final DocumentReference docRef2 = db.collection("Ideas").document(getIntent().getStringExtra("ideaID"));
+                            docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(FirestoreLibraryKt.getUSERNAME(), "delete", "image", ur)));
+
                             Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT).show();
 
                         }

@@ -16,7 +16,7 @@ import android.view.*
 import android.widget.TextView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 
-class ChatActivity: AppCompatActivity(){
+class ChatActivity: AppCompatActivity() {
     private var rootRef: FirebaseFirestore? = null
     var user = ""
     var lastuser = ""
@@ -41,9 +41,11 @@ class ChatActivity: AppCompatActivity(){
 
         button.setOnClickListener {
             val messageText = edit_text.text.toString()
+
             if(messageText.isEmpty()){
                 Log.d("TAG","emptyy");
             }
+
             val message = Message(messageText, user)
 
             rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)

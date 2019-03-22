@@ -21,12 +21,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import firestore_library.FirestoreLibraryKt;
 
 public class ViewUploadsActivity extends AppCompatActivity {
 
@@ -119,6 +122,8 @@ public class ViewUploadsActivity extends AppCompatActivity {
                         switch (choice) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 docRef.delete();
+                                final DocumentReference docRef2 = db.collection("Ideas").document(idea_id);
+                                docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(FirestoreLibraryKt.getUSERNAME(), "delete", "document", docs_id)));
                                 finish();
                                 startActivity(getIntent());
                                 break;

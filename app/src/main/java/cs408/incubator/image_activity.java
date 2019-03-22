@@ -28,6 +28,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.core.OrderBy;
@@ -41,6 +42,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import firestore_library.FirestoreLibraryKt;
 
 public class image_activity extends AppCompatActivity {
 
@@ -168,6 +171,10 @@ public class image_activity extends AppCompatActivity {
                             //create new db entries that contain metadata from the uploads so we don't overwrite the old stuff
                             //String uploadId = mDatabaseRef.push().getKey();
                             Toast.makeText(image_activity.this,"Successfully upload the image ", Toast.LENGTH_LONG).show();
+
+                            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                            final DocumentReference docRef2 = db1.collection("Ideas").document(idea.tag);
+                            docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(FirestoreLibraryKt.getUSERNAME(), "upload", "image", FileName.getText().toString().trim())));
                             //mDatabaseRef.child(uploadId).setValue(upload);
 
                             // Add a new document with a generated id.

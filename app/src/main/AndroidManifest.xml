@@ -134,6 +134,10 @@
             android:label="Chat"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".DisplayLog"
+            android:label="Log"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <receiver android:name=".NotificationPublisher"/>
     </application>
 

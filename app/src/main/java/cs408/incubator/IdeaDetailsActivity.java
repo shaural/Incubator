@@ -314,6 +314,13 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         finish();
     }
 
+    public void getLog(View v) {
+        Intent i = new Intent(this,DisplayLog.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
 
     public void manageCollabs(View v){
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_collab,null);

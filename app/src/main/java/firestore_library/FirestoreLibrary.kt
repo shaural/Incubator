@@ -120,7 +120,7 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
                 for (document in result) {
                     if (document != null && userIdeas.contains(document.id)) {
                         var temp = document.data["Name"].toString()
-                        if (temp.toLowerCase().contains(query.toLowerCase())) {
+                        if (temp.contains(query)) {
                             // match
                             searchIdeas.add("" +document.data["Name"] + "~"+document.id)
                         } else {

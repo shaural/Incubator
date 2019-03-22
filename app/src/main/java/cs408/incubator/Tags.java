@@ -54,7 +54,6 @@ String USERNAME = FirestoreLibraryKt.getUSERNAME();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference docRef = db.collection("Ideas").document(idea_id);

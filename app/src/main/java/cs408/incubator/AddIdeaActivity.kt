@@ -99,7 +99,10 @@ class AddIdeaActivity : AppCompatActivity() {
                 .setView(view)
                 .setPositiveButton("Add") { _, _ ->
                     val email = view.findViewById<EditText>(R.id.collabEmail).text.toString()
-                    verifyUsers(email,::verifyCollaborator)
+                    if(email.isNotEmpty())
+                        verifyUsers(email,::verifyCollaborator)
+                    else
+                        Toast.makeText(applicationContext,"Please enter colllaborator email",Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel") {_,_-> }
         builder.create()

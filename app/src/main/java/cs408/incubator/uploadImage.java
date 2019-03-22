@@ -12,9 +12,8 @@ public class uploadImage {
     }
 
     public uploadImage(String name, String imageUrl) {
-        if (name.trim().isEmpty()) {
+
             name = "No Name !";
-        }
         mName = name;
         mImageUrl = imageUrl;
     }

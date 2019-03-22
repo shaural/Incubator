@@ -190,11 +190,11 @@ class TaskActivity : AppCompatActivity() {
         dialog.setPositiveButton("Update") { _: DialogInterface, _: Int ->
             if (toDoName.text.isNotEmpty()) {
                 if(deadline.text.isNullOrEmpty()) {
-                    item.itemName = toDoName.text.toString()
+                    //item.itemName = toDoName.text.toString()
                     //add new item
-                    docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
-                    var str_log = item.itemName + "_to_" + toDoName.text.toString()
-                    docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "update", "task", str_log)))
+                    //docRef.update("Tasks", FieldValue.arrayUnion(toDoName.text.toString()))
+                    //var str_log = item.itemName + "_to_" + toDoName.text.toString()
+                    //docRef.update("Log", FieldValue.arrayUnion(genLogStr(USERNAME, "update", "task", str_log)))
 
                     item.toDoId = todoId
                     item.isCompleted = false
@@ -430,10 +430,10 @@ class TaskActivity : AppCompatActivity() {
             if(it["ctasks"]!=null){
                 findViewById<LinearLayout>(R.id.rv2_item).visibility = View.VISIBLE
                 var string = ""
-                compTasks = it["ctasks"] as ArrayList<String>
-                for(task in compTasks){
-                    string += task+"\n"
-                }
+               // compTasks = it["ctasks"] as ArrayList<String>
+               // for(task in compTasks){
+                 //   string += task+"\n"
+               // }
 
                 findViewById<TextView>(R.id.compTasks).text = string
             }

@@ -73,8 +73,8 @@ public class ViewUploadsActivity extends AppCompatActivity {
 
         /* Get Firestore instance and data */
         db = FirebaseFirestore.getInstance();
-        final CollectionReference docRef = db.collection("Ideas").document(idea_id).collection("Documents");
-
+        /* File storage path */
+        final CollectionReference docRef = db.collection("Documents");
         /* Make documents list */
         docRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

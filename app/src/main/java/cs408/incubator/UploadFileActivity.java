@@ -143,9 +143,15 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
     /* this method is uploading the file */
     private void uploadFile(Uri data) {
         progressBar.setVisibility(View.VISIBLE);
+        /* retrieve file extenstion */
+        String uri = data.toString();
+        String extension = ".unknown";
+        if(uri.contains(".")) {
+            extension = uri.substring(uri.lastIndexOf(".")+1);
+        }
 
         final StorageReference ref = mStorageReference.child(Constants.STORAGE_PATH_UPLOADS + "/" +
-                idea_id + "/" + System.currentTimeMillis() + ".pdf");
+                idea_id + "/" + System.currentTimeMillis() + "." + extension);
         final DocumentReference docRef = db.collection("Ideas").document(idea_id).collection("Documents").document();
         docs_id = docRef.getId();
 

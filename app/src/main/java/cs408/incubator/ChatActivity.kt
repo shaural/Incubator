@@ -40,7 +40,6 @@ class ChatActivity: AppCompatActivity() {
 
         button.setOnClickListener {
             val messageText = edit_text.text.toString()
-
             val message = Message(messageText, user)
 
             rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)

@@ -60,4 +60,8 @@
     <string name="title_activity_shared_notes">Shared Notes</string>
     <string name="title_activity_view_note">Note</string>
 
+    <string name="hint_message_text">Type a message&#8230;</string>
+    <string name="error_empty_message">Please enter a message</string>
+    <string name="error_message_failed">Failed to send your message</string>
+
 </resources>

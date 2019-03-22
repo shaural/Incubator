@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.firestore.CollectionReference
+import firestore_library.USERNAME
 import firestore_library.addIdea
 import firestore_library.getDB
 import firestore_library.verifyUsers
@@ -122,14 +123,19 @@ class AddIdeaActivity : AppCompatActivity() {
         if(s != "false") {
             var value = ""
             val text = findViewById<EditText>(R.id.addCollab).text.toString()
-            if(text.isEmpty())
-                value = s
-            else
-                value = "$text, $s"
+            if(text.contains(s) || s.equals(USERNAME)){
+                Toast.makeText(applicationContext,"User already added",Toast.LENGTH_SHORT).show()
+            }
+            else {
+                if (text.isEmpty())
+                    value = s
+                else
+                    value = "$text, $s"
 
-            findViewById<EditText>(R.id.addCollab).setText(value)
-            Toast.makeText(applicationContext,"User Added",Toast.LENGTH_SHORT).show()
-            findViewById<EditText>(R.id.addCollab).requestFocus()
+                findViewById<EditText>(R.id.addCollab).setText(value)
+                Toast.makeText(applicationContext, "User Added", Toast.LENGTH_SHORT).show()
+                findViewById<EditText>(R.id.addCollab).requestFocus()
+            }
         }
         else {
             collabcheck = false

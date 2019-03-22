@@ -129,6 +129,11 @@
             android:label="Tags"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".ChatActivity"
+            android:label="Chat"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <receiver android:name=".NotificationPublisher"/>
     </application>
 

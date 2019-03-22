@@ -49,6 +49,8 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     static String tag;
     private static final String TAG = "IdeaDetailsActivity";
     //private Button addimagebutton;
+    String nametitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         TextView title = findViewById(R.id.ideaName);
+                        nametitle = findViewById(R.id.ideaName).toString();
                         TextView desc = findViewById(R.id.detailDesc);
                         EditText editableDesc = findViewById(R.id.descriptionText1);
                         TextView tags = findViewById(R.id.tagText);
@@ -287,6 +290,16 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void manageChat(View v){
+
+        Intent i = new Intent(this, ChatActivity.class);
+        i.putExtra("ideaID",tag);
+        i.putExtra("userID",USERNAME);
+        i.putExtra("nametitle",nametitle);
+        startActivity(i);
+        finish();
+    }
+
     public void manageTags(View v) {
         Intent i = new Intent(this, Tags.class);
         i.putExtra("ideaID",tag);
@@ -327,43 +340,48 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
     public void checkCollaborator(String s){
         final String newUser = s;
-        getDB().collection("Users").document(newUser)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists()){
-                                getDB().collection("Users").document(newUser)
-                                        .update("Ideas_Owned",FieldValue.arrayUnion(tag),
-                                                "Priority",FieldValue.arrayUnion(tag));
+        TextView t = findViewById(R.id.collaboratorText);
+        if(t.getText().toString().contains(s)){
+            Toast.makeText(getApplicationContext(),"Collaborator already exists",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            getDB().collection("Users").document(newUser)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    getDB().collection("Users").document(newUser)
+                                            .update("Ideas_Owned", FieldValue.arrayUnion(tag),
+                                                    "Priority", FieldValue.arrayUnion(tag));
 
-                                getDB().collection("Ideas").document(tag)
-                                        .update("Collaborators",FieldValue.arrayUnion(newUser))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                getDB().collection("Ideas").document(tag)
-                                                        .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
-                                                                "collaborator",newUser)));
+                                    getDB().collection("Ideas").document(tag)
+                                            .update("Collaborators", FieldValue.arrayUnion(newUser))
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    getDB().collection("Ideas").document(tag)
+                                                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
+                                                                    "collaborator", newUser)));
 
-                                                addCollabUI(newUser);
+                                                    addCollabUI(newUser);
 
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                            }
-                                        });
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(),"User Not Found",Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                }
+                                            });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "User Not Found", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }
 
 
     }

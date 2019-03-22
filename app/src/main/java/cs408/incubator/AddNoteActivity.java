@@ -57,7 +57,6 @@ public class AddNoteActivity extends AppCompatActivity {
         new_note = i.getBooleanExtra("new_note", true);
 
         if (!new_note) {
-            // TODO set edit text values
             String tit = i.getStringExtra("title");
             String des = i.getStringExtra("desc");
             tv_title.setText(tit);

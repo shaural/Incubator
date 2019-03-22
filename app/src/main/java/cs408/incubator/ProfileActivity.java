@@ -160,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 String _name = newName.getText().toString().trim();
                 if (user != null && !_name.equals("")
-                        && !(_name.length() > 70) && engPattern(_name)) {
+                        && !(_name.length() > 70) ) {
                     _User.put("name", newName.getText().toString().trim());
                     _User.put("email", email);
                     db.collection("Users").document(email).set(_User, SetOptions.merge())
@@ -169,8 +169,6 @@ public class ProfileActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         String _name = newName.getText().toString().trim();
-                                        display_name.setText(_name);
-                                        oldName.setText(_name);
                                         Toast.makeText(ProfileActivity.this, "Name is updated!", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     } else {
@@ -184,9 +182,6 @@ public class ProfileActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 } else if ((newName.getText().toString().length() > 70)) {
                     newName.setError("Name is too long");
-                    progressBar.setVisibility(View.GONE);
-                } else if (!engPattern(_name)) {
-                    newName.setError("Invalid Characters included");
                     progressBar.setVisibility(View.GONE);
                 }
 
@@ -228,7 +223,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(ProfileActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ProfileActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_LONG).show();
                                             signOut();
                                             progressBar.setVisibility(View.GONE);
                                         } else {
@@ -328,7 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
         auth.signOut();
         Toast.makeText(ProfileActivity.this, "Signed out!", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
-        finish();
+
     }
 
     @Override
@@ -351,10 +346,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public boolean engPattern ( String str) {
-        String pattern = "^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$";
-        String input = str;
 
-        return Pattern.matches(pattern, input);
-    }
 }

@@ -260,7 +260,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
             et_desc.setVisibility(View.GONE);
 
             prevTitle.setVisibility(View.VISIBLE);
-            prevTitle.setText(idea_title.getText().toString());
+            //prevTitle.setText(idea_title.getText().toString());
             idea_title.setVisibility(View.GONE);
 
 
@@ -269,7 +269,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
             final String update_desc = et_desc.getText().toString();
             final String update_title = idea_title.getText().toString();
-            docRef.update("Description", update_desc,"Name",update_title)
+            docRef.update("Description", update_desc)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

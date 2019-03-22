@@ -123,19 +123,16 @@ class AddIdeaActivity : AppCompatActivity() {
         if(s != "false") {
             var value = ""
             val text = findViewById<EditText>(R.id.addCollab).text.toString()
-            if(text.contains(s) || s.equals(USERNAME)){
-                Toast.makeText(applicationContext,"User already added",Toast.LENGTH_SHORT).show()
-            }
-            else {
-                if (text.isEmpty())
-                    value = s
-                else
-                    value = "$text, $s"
 
-                findViewById<EditText>(R.id.addCollab).setText(value)
-                Toast.makeText(applicationContext, "User Added", Toast.LENGTH_SHORT).show()
-                findViewById<EditText>(R.id.addCollab).requestFocus()
-            }
+            if (text.isEmpty())
+                value = s
+            else
+                value = "$text, $s"
+
+            findViewById<EditText>(R.id.addCollab).setText(value)
+            Toast.makeText(applicationContext, "User Added", Toast.LENGTH_SHORT).show()
+            findViewById<EditText>(R.id.addCollab).requestFocus()
+
         }
         else {
             collabcheck = false

@@ -75,7 +75,7 @@ class MainIdeasActivity : AppCompatActivity() {
 //                                .substring(item.second.toString().indexOf('-')+1,item.second.toString().length))
                         newList.add(item.second.toString().substring(item.second.toString().indexOf('~')+1,item.second.toString().length))
                     }
-                    setPriority(newList)
+                    //setPriority(newList)
                 }
             }
         })

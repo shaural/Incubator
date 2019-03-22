@@ -219,7 +219,10 @@ public class ProfileActivity extends AppCompatActivity {
                         newPassword.setError("Password too short, enter minimum 6 characters");
                         progressBar.setVisibility(View.GONE);
                     } else {
-                        user.updatePassword(newPassword.getText().toString().trim())
+                        Toast.makeText(ProfileActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                        signOut();
+                        progressBar.setVisibility(View.GONE);
+                        /**user.updatePassword(newPassword.getText().toString().trim())
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -232,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             progressBar.setVisibility(View.GONE);
                                         }
                                     }
-                                });
+                                });*/
                     }
                 } else if (newPassword.getText().toString().trim().equals("")) {
                     newPassword.setError("Enter password");

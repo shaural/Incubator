@@ -69,7 +69,7 @@ class AddIdeaActivity : AppCompatActivity() {
             verification = false
             return false
         }
-        else if(title.length > 150){
+        else if(title.length > 8){
             Toast.makeText(applicationContext,"Idea Title too Long. [150 character Limit]",Toast.LENGTH_SHORT).show()
             verification = false
             return false
@@ -97,11 +97,11 @@ class AddIdeaActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add Collaborator")
                 .setView(view)
-                .setPositiveButton("Add") { _, _ ->
+                .setPositiveButton("Cancel") { _, _ ->
                     val email = view.findViewById<EditText>(R.id.collabEmail).text.toString()
                     verifyUsers(email,::verifyCollaborator)
                 }
-                .setNegativeButton("Cancel") {_,_-> }
+                .setNegativeButton("Add") {_,_-> }
         builder.create()
         builder.show()
     }

@@ -78,9 +78,10 @@ class TaskActivity : AppCompatActivity() {
 
                     if(cal.timeInMillis < current){
                         Toast.makeText(this,"Deadline cannot be set!",Toast.LENGTH_SHORT).show()
-                        cal = Calendar.getInstance()
+                        cal.timeInMillis = current
                     }
                     else {
+                        cal.set(Calendar.DAY_OF_MONTH,d+1)
                         val format = "MMM d, yyyy"
                         val sdf = SimpleDateFormat(format, Locale.US)
                         deadline.setText(sdf.format(cal.time))
@@ -166,9 +167,10 @@ class TaskActivity : AppCompatActivity() {
 
                 if(cal.timeInMillis < current){
                     Toast.makeText(this,"Deadline cannot be set!",Toast.LENGTH_SHORT).show()
-                    cal = Calendar.getInstance()
+                    cal.timeInMillis = current
                 }
                 else {
+                    cal.set(Calendar.DAY_OF_MONTH,d+1)
                     val format = "MMM d, yyyy"
                     val sdf = SimpleDateFormat(format, Locale.US)
                     deadline.setText(sdf.format(cal.time))

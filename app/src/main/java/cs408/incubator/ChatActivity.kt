@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.MenuItem
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,7 +41,9 @@ class ChatActivity: AppCompatActivity(){
 
         button.setOnClickListener {
             val messageText = edit_text.text.toString()
-
+            if(messageText.isEmpty()){
+                Log.d("TAG","emptyy");
+            }
             val message = Message(messageText, user)
 
             rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)

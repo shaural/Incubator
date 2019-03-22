@@ -121,24 +121,6 @@ import java.util.List;
         @Override
         public void onItemClick( int k) {
             Toast.makeText(this, "Click image ", Toast.LENGTH_SHORT).show();
-            //when image is clicked
-            //static String clickUrl = ;
-            //manageImages_fullscreen();
-            //Intent i = new Intent(this,FullscreenImageActivity.class);
-            //image_activity ima = new image_activity();
-            //i.setData(image_activity.mImageUri);
-            //Toast.makeText(this, "image uri " + image_activity.mImageUri, Toast.LENGTH_SHORT).show();
-            //Log.d(TAG,"image uri " + image_activity.mImageUri);
-            //startActivity(i);
-
-            Intent i = new Intent(this, FullscreenImageActivity.class);
-            i.putExtra("ideaID",getIntent().getStringExtra("ideaID"));
-            uploadImage u = new uploadImage();
-            ur = mUploads.get(k).mImageUrl;
-            Log.d(TAG,"image url @mageimage_fullscreen " + ur);
-            startActivity(i);
-            finish();
-
 
 
         }
@@ -198,15 +180,12 @@ import java.util.List;
                         public void onSuccess(Void aVoid) {
                             db.collection("images").document(selectedKey).delete();
                             Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT).show();
-                            finish();
-                            startActivity(getIntent());
+
                         }
                     });
-                    //onRestart();
+
                     dialogInterface.dismiss();
 
-                    //onResume();
-                    mAdapter.notifyDataSetChanged();
                 }
 
             });
@@ -220,20 +199,6 @@ import java.util.List;
 
 
 
-            /*uploadImage selectedItem = mUploads.get(position);
-            final String selectedKey = selectedItem.getKey();
-            Log.d(TAG,"selected key: " + selectedKey);
-            StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());
-            Log.d(TAG,"imageRef: " + imageRef);
-            //AlertDialog.Builder alert = new AlertDialog.Builder(image_list)
-            imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                //making sure the data got delete from both db and storage
-                public void onSuccess(Void aVoid) {
-                   db.collection("images").document(selectedKey).delete();
-                   Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT);
-                }
-            });*/
 
             alert.show();
 

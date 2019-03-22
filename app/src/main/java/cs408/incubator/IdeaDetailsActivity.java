@@ -1,18 +1,22 @@
 package cs408.incubator;
 
 import android.content.DialogInterface;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -40,8 +44,13 @@ public class IdeaDetailsActivity extends AppCompatActivity {
     String USERNAME = FirestoreLibraryKt.getUSERNAME();
 
     EditText descTV;
-    String tag;
     String idea_owner;
+
+    static String tag;
+    private static final String TAG = "IdeaDetailsActivity";
+    //private Button addimagebutton;
+    String nametitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +68,44 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         //descTV = findViewById(R.id.descriptionText1);
         //stDesc = getIntent().getExtras().getString("Desc");
         //descTV.setText("test");
+        /**ImageButton addimagebutton =findViewById(R.id.picButton);
+        addimagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"IDEA ID :  " + tag);
+                manageImages();
+            }
+        });*/
+
+        Button showimagebutton = findViewById(R.id.show_image_button);
+        showimagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG,"IDEA ID :  " + tag);
+                manageImages_list();
+
+            }
+        });
 
         Intent i = getIntent();
         final String ideaTag = i.getStringExtra("ideaTag");
         tag = ideaTag;
-
         DocumentReference docRef = db.collection("Ideas").document(ideaTag);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         TextView title = findViewById(R.id.ideaName);
+                        nametitle = findViewById(R.id.ideaName).toString();
                         TextView desc = findViewById(R.id.detailDesc);
                         EditText editableDesc = findViewById(R.id.descriptionText1);
                         TextView tags = findViewById(R.id.tagText);
                         TextView collab = findViewById(R.id.collaboratorText);
                         LinearLayout collabView = findViewById(R.id.collabView);
+                       // TextView addimage = findViewById(R.id.)
 
                         title.setText(document.getString("Name"));
                         desc.setText(document.getString("Description"));
@@ -261,6 +290,16 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void manageChat(View v){
+
+        Intent i = new Intent(this, ChatActivity.class);
+        i.putExtra("ideaID",tag);
+        i.putExtra("userID",USERNAME);
+        i.putExtra("nametitle",nametitle);
+        startActivity(i);
+        finish();
+    }
+
     public void manageTags(View v) {
         Intent i = new Intent(this, Tags.class);
         i.putExtra("ideaID",tag);
@@ -274,6 +313,14 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+    public void getLog(View v) {
+        Intent i = new Intent(this,DisplayLog.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
 
     public void manageCollabs(View v){
         final View view = getLayoutInflater().inflate(R.layout.dialog_add_collab,null);
@@ -300,43 +347,48 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
     public void checkCollaborator(String s){
         final String newUser = s;
-        getDB().collection("Users").document(newUser)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if(document.exists()){
-                                getDB().collection("Users").document(newUser)
-                                        .update("Ideas_Owned",FieldValue.arrayUnion(tag),
-                                                "Priority",FieldValue.arrayUnion(tag));
+        TextView t = findViewById(R.id.collaboratorText);
+        if(t.getText().toString().contains(s)){
+            Toast.makeText(getApplicationContext(),"Collaborator already exists",Toast.LENGTH_SHORT).show();
+        }
+        else {
+            getDB().collection("Users").document(newUser)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    getDB().collection("Users").document(newUser)
+                                            .update("Ideas_Owned", FieldValue.arrayUnion(tag),
+                                                    "Priority", FieldValue.arrayUnion(tag));
 
-                                getDB().collection("Ideas").document(tag)
-                                        .update("Collaborators",FieldValue.arrayUnion(newUser))
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                getDB().collection("Ideas").document(tag)
-                                                        .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
-                                                                "collaborator",newUser)));
+                                    getDB().collection("Ideas").document(tag)
+                                            .update("Collaborators", FieldValue.arrayUnion(newUser))
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    getDB().collection("Ideas").document(tag)
+                                                            .update("Log", FieldValue.arrayUnion(LogKt.genLogStr(USERNAME, "added",
+                                                                    "collaborator", newUser)));
 
-                                                addCollabUI(newUser);
+                                                    addCollabUI(newUser);
 
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                            }
-                                        });
-                            }
-                            else{
-                                Toast.makeText(getApplicationContext(),"User Not Found",Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                }
+                                            });
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "User Not Found", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    }
-                });
+                    });
+        }
 
 
     }
@@ -465,6 +517,35 @@ public class IdeaDetailsActivity extends AppCompatActivity {
 
         Intent j = new Intent(getApplicationContext(), MainIdeasActivity.class);
         startActivity(j);
+        finish();
+    }
+
+
+    public void manageDocument(View v) {
+        Intent i = new Intent(this, ViewUploadsActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
+    public void personalNotes(View v) {
+        Intent i = new Intent(this, NotesActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+    }
+
+    public void manageImages_list() {
+        Intent i = new Intent(this, image_list.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
+        finish();
+
+    }
+    public void sharedNotes(View v) {
+        Intent i = new Intent(this, SharedNotesActivity.class);
+        i.putExtra("ideaID",tag);
+        startActivity(i);
         finish();
     }
 

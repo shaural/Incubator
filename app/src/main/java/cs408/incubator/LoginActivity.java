@@ -1,7 +1,10 @@
 package cs408.incubator;
 
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +30,7 @@ import static firestore_library.FirestoreLibraryKt.updateUserName;
 public class LoginActivity extends AppCompatActivity {
 
     public static String APPUSER;
+    public static final String CHANNEL_ID = "INCUBATOR";
 
     private EditText inputEmail, inputPassword;
     private FirebaseAuth auth;
@@ -43,6 +47,18 @@ public class LoginActivity extends AppCompatActivity {
         /**Intent intent = new Intent(this,MainIdeasActivity.class);
         startActivity(intent);
         finish();*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Incubator";
+            String description = "CS408.Incubator";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

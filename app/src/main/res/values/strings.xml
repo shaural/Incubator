@@ -23,6 +23,7 @@
     <string name="desc">Description</string>
     <string name="collab">Add Collaborators</string>
     <string name="tags">Add Tags</string>
+    <string name="pics">Add Images</string>
 
     <string name="title_activity_login2">Sign in</string>
     <string name="action_sign_in_short">Register</string>
@@ -54,5 +55,13 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="welcome_msg1">Enter your Display Name to continue</string>
     <string name="welcome_msg2">Welcome to Incubator!</string>
+    <string name="title_activity_notes">Notes</string>
+    <string name="title_activity_add_note">Note</string>
+    <string name="title_activity_shared_notes">Shared Notes</string>
+    <string name="title_activity_view_note">Note</string>
+
+    <string name="hint_message_text">Type a message&#8230;</string>
+    <string name="error_empty_message">Please enter a message</string>
+    <string name="error_message_failed">Failed to send your message</string>
 
 </resources>

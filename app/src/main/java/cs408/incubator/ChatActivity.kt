@@ -40,6 +40,7 @@ class ChatActivity: AppCompatActivity() {
         val name = intent.getStringExtra("nametitle")
 
         button.setOnClickListener {
+
             val messageText = edit_text.text.toString()
 
             if(messageText.isEmpty()){
@@ -50,6 +51,7 @@ class ChatActivity: AppCompatActivity() {
 
             rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)
             edit_text.text.clear()
+
         }
 
         val query = rootRef!!.collection("Ideas").document(docP).collection("Messages").orderBy("sentAt", Query.Direction.ASCENDING)
@@ -97,7 +99,7 @@ class ChatActivity: AppCompatActivity() {
             return if (user != getItem(position).fromUser){
                 R.layout.item_chat_received
             } else {
-                R.layout.item_chat_sent
+                R.layout.item_chat_received
             }
         }
 

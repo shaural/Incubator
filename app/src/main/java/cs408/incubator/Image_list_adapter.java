@@ -1,4 +1,5 @@
 package cs408.incubator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,10 +19,10 @@ import java.util.List;
 
 public class Image_list_adapter extends RecyclerView.Adapter<Image_list_adapter.ImageViewHolder> {
     private Context mContext;
-    private List<uploadImage> mUploads;
+    private List<String> mUploads;
     private OnItemClickListener mListener;
 
-    public Image_list_adapter(Context context, List<uploadImage> uploads) {
+    public Image_list_adapter(Context context, List<String> uploads) {
         mContext = context;
         mUploads = uploads;
     }
@@ -30,12 +32,14 @@ public class Image_list_adapter extends RecyclerView.Adapter<Image_list_adapter.
         return new ImageViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        uploadImage uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getName());
+        String uploadCurrent = mUploads.get(position);
+        holder.textViewName.setText("No Name!");
+        System.out.println("Print"+uploadCurrent);
         Picasso.with(mContext)
-                .load(uploadCurrent.getImageUrl())
+                .load(uploadCurrent)
                 .placeholder(R.mipmap.ic_launcher)
                 .fit()
                 .centerCrop()

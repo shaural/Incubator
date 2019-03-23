@@ -53,7 +53,8 @@ public class image_list extends AppCompatActivity implements Image_list_adapter.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         private DatabaseReference mDatabaseRef;
         static String ur;
-        private List<uploadImage> mUploads;
+        private List<String> mUploads;
+        private List<String> keys;
         private static ArrayList<Type> mArrayList = new ArrayList<>();
         private static final String TAG = "image_list";
 
@@ -78,6 +79,7 @@ public class image_list extends AppCompatActivity implements Image_list_adapter.
             ideaId = getIntent().getStringExtra("ideaID");
 
             mUploads = new ArrayList<>();
+            keys = new ArrayList<>();
 
             mAdapter = new Image_list_adapter(image_list.this, mUploads);
             mRecyclerView.setAdapter(mAdapter);
@@ -92,14 +94,19 @@ public class image_list extends AppCompatActivity implements Image_list_adapter.
                         for(QueryDocumentSnapshot document : task.getResult()){
                             //getting the idea id from image's collection doc & compare it w/ current idea id
                             if(document.get("ideaId").equals(idea.tag)) {
-                                uploadImage upload = document.toObject(uploadImage.class);
-                                upload.setKey(document.getId());
+                                String url = document.get("mImageUrl").toString();
+                                //uploadImage upload = document.toObject(uploadImage.class);
+                                //upload.setKey(document.getId());
+                                System.out.println("print"+url);
                                 //Log.d(TAG,"DOC ID!!! "+ document.getId());
-                                mUploads.add(upload);
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                mUploads.add(url);
+                                keys.add(document.getId());
+                                Log.d(TAG, document.getId() + " => " + url);
                                 Log.d(TAG, document.getId() + " => idea id " + document.get("ideaId"));
                             }
                         }
+
+
 
                         mAdapter.notifyDataSetChanged();
                         mProgressCircle.setVisibility(View.INVISIBLE);
@@ -172,19 +179,19 @@ public class image_list extends AppCompatActivity implements Image_list_adapter.
             alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    uploadImage selectedItem = mUploads.get(position);
-                    final String selectedKey = selectedItem.getKey();
+                    final String selectedKey = keys.get(position);
                     Log.d(TAG,"selected key: " + selectedKey);
-                    StorageReference imageRef = mStorage.getReferenceFromUrl(selectedItem.getImageUrl());
+                    StorageReference imageRef = mStorage.getReferenceFromUrl(mUploads.get(position));
                     Log.d(TAG,"imageRef: " + imageRef);
                     //AlertDialog.Builder alert = new AlertDialog.Builder(image_list)
                     imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         //making sure the data got delete from both db and storage
                         public void onSuccess(Void aVoid) {
+                            System.out.println("image");
                             db.collection("images").document(selectedKey).delete();
                             final DocumentReference docRef2 = db.collection("Ideas").document(getIntent().getStringExtra("ideaID"));
-                            docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(FirestoreLibraryKt.getUSERNAME(), "delete", "image", ur)));
+                            docRef2.update("Log", FieldValue.arrayUnion(LogKt.genLogStr(FirestoreLibraryKt.getUSERNAME(), "delete", "image", "new-image")));
 
                             Toast.makeText(image_list.this,"Item deleted", Toast.LENGTH_SHORT).show();
 

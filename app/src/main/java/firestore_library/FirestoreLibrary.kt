@@ -148,21 +148,34 @@ fun getSearch(query: String, callback: (ArrayList<String>) -> Unit) {
             }
 }
 
-fun setUserDispName(disp : String, callback: (Boolean) -> Unit) {
+fun setUserDispName(disp : String,i:Int, callback: (Boolean) -> Unit) {
     val map = HashMap<String,Any>()
     map.put("email", USERNAME)
-    map.put("name",disp)
+    map.put("name", USERNAME)
     map.put("Priority",ArrayList<String>())
     map.put("Ideas_Owned",ArrayList<String>())
 
-    getDB().collection("Users").document(USERNAME).set(map)
-            .addOnSuccessListener {
-                println("Successfully set display name")
-                callback(true)
-            }
-            .addOnFailureListener {
-                println(USERNAME + "Fail!")
-            }
+    if(i==0) {
+
+        getDB().collection("Users").document(USERNAME).set(map)
+                .addOnSuccessListener {
+                    println("Successfully added user")
+                    callback(true)
+                }
+                .addOnFailureListener {
+                    println(USERNAME + "Fail!")
+                }
+    }
+    else if(i == 1){
+        getDB().collection("Users").document(USERNAME).update("name",disp)
+                .addOnSuccessListener {
+                    println("Successfully set display name")
+                    callback(true)
+                }
+                .addOnFailureListener {
+                    println(USERNAME + "Fail!")
+                }
+    }
 }
 
 fun getIdeasByID(key: String, callback: (String) -> Unit) {

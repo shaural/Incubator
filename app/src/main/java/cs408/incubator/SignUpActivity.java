@@ -50,6 +50,8 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+                startActivity(i);
                 finish();
             }
         });
@@ -82,14 +84,18 @@ public class SignUpActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignUpActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(SignUpActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
                                 // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(SignUpActivity.this, "Authentication failed." + task.getException(),
+                                    if(task.getException().toString().contains("email address is already in use"))
+                                        Toast.makeText(SignUpActivity.this, "Authentication failed. User Already Exists",
                                             Toast.LENGTH_SHORT).show();
+                                    else if(task.getException().toString().contains("badly formatted"))
+                                        Toast.makeText(SignUpActivity.this, "Authentication failed. Invalid Email Format",
+                                                Toast.LENGTH_SHORT).show();
                                 } else {
                                     LoginActivity.APPUSER = email;
                                     updateUserName(email);

@@ -15,7 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.lang.Thread.sleep
 
-class IdeaDetailsInstrumentationTest {
+class IdeaDetailsTests {
     @get:Rule
     public val rule = ActivityTestRule<MainIdeasActivity>(MainIdeasActivity::class.java)
 

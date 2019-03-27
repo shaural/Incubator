@@ -36,7 +36,6 @@ class AddIdeaTests {
 
     @Before
     fun setUp() {
-        updateUserName("newus@gmail.com")
         addIdeaActivity = rule.activity
         mainIdeasActivity = rule2.activity
         mdevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

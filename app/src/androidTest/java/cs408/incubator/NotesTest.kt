@@ -35,7 +35,7 @@ class NotesTest {
         mainIdeasActivity = rule.activity
         mdevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         if(!titleSet) {
-            title = "Test-" + nextInt()
+            title = "NotesTest-" + nextInt()
             addTestIdea()
             titleSet = true
         }

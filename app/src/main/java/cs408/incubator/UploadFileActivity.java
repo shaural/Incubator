@@ -109,7 +109,7 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
         //creating an intent for file chooser
         Intent intent = new Intent();
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
+        intent.setType("*/PDF");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_PDF_CODE);
     }
@@ -145,9 +145,13 @@ public class UploadFileActivity extends AppCompatActivity implements View.OnClic
         progressBar.setVisibility(View.VISIBLE);
         /* retrieve file extenstion */
         String uri = data.toString();
+        String extension = ".unknown";
+        if(uri.contains(".")) {
+            extension = uri.substring(uri.lastIndexOf(".")+1);
+        }
 
         final StorageReference ref = mStorageReference.child(Constants.STORAGE_PATH_UPLOADS + "/" +
-                idea_id + "/" + System.currentTimeMillis());
+                idea_id + "/" + System.currentTimeMillis() + "." + extension);
         /* Document storage path */
         final DocumentReference docRef = db.collection("Documents").document();
         docs_id = docRef.getId();

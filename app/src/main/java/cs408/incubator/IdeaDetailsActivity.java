@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -184,7 +185,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                                 }
                             }
 
-                            collab.setText(t.toString());
+                            collab.setText(t.toString()+"\n");
                         }
 
                     } else {
@@ -332,7 +333,12 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         EditText emailView = view.findViewById(R.id.collabEmail);
                         String email = emailView.getText().toString();
-                        checkCollaborator(email);
+                        if(email.isEmpty())
+                            Toast.makeText(getApplicationContext(),"Collaborator email cannot be Empty!",Toast.LENGTH_SHORT).show();
+                        else if(!Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches())
+                            Toast.makeText(getApplicationContext(),"Invalid Collaborator Email!",Toast.LENGTH_SHORT).show();
+                        else
+                            checkCollaborator(email);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -349,7 +355,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
         final String newUser = s;
         TextView t = findViewById(R.id.collaboratorText);
         if(t.getText().toString().contains(s)){
-            Toast.makeText(getApplicationContext(),"Collaborator already exists",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Collaborator already exists",Toast.LENGTH_LONG).show();
         }
         else {
             getDB().collection("Users").document(newUser)
@@ -414,6 +420,7 @@ public class IdeaDetailsActivity extends AppCompatActivity {
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        text.setText("");
                                         text.setVisibility(View.GONE);
                                         removeUser(rmuser);
                                     }

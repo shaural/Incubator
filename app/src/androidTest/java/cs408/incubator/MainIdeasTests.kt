@@ -48,7 +48,7 @@ class MainIdeasTests {
 
     @Test
     fun add_new_idea(){
-        val title = "Successful_add_new_idea"
+        val title = "Successful_add_new_idea_test"
         val tags = "Testing"
 
         Espresso.onView(withId(R.id.fab)).perform(ViewActions.click())
@@ -74,16 +74,16 @@ class MainIdeasTests {
 
     @Test
     fun check_idea_details() {
-        val title = "Successful_add_new_idea"
+        val title = "Successful_add_new_idea_test"
         val desc = "Checking for details"
         val tag = "Testing"
         sleep(2000)
-        Espresso.onView(withText("Successful_add_new_idea")).perform(ViewActions.click())
+        Espresso.onView(withText("Successful_add_new_idea_test")).perform(ViewActions.click())
         sleep(1000)
         Espresso.onView(withId(R.id.ideaName)).check(matches(withText(title)))
         Espresso.onView(withId(R.id.detailDesc)).check(matches(withText(desc)))
         Espresso.onView(withId(R.id.tagText)).check(matches(withText(tag)))
-        Espresso.onView(withId(R.id.collaboratorText)).check(matches(withText(USERNAME)))
+        Espresso.onView(withText("abca@abca.com")).check(matches(isDisplayed()))
     }
 
 

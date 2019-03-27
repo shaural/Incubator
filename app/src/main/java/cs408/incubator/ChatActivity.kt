@@ -39,11 +39,15 @@ class ChatActivity: AppCompatActivity() {
         val name = intent.getStringExtra("nametitle")
 
         button.setOnClickListener {
-            val messageText = edit_text.text.toString()
-            val message = Message(messageText, user)
 
-            rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)
-            edit_text.text.clear()
+            if (edit_text.text.toString().length < 1){
+
+            } else {
+                val messageText = edit_text.text.toString()
+                val message = Message(messageText, user)
+                rootRef!!.collection("Ideas").document(docP).collection("Messages").add(message)
+                edit_text.text.clear()
+            }
         }
 
         val query = rootRef!!.collection("Ideas").document(docP).collection("Messages").orderBy("sentAt", Query.Direction.ASCENDING)

@@ -20,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.lang.Thread.sleep
 
-class MainIdeasActivityInstrumentationTest {
+class MainIdeasTests {
 
     @get:Rule
     public val rule = ActivityTestRule<MainIdeasActivity>(MainIdeasActivity::class.java)
@@ -29,6 +29,7 @@ class MainIdeasActivityInstrumentationTest {
 
     @Before
     fun setUp() {
+        updateUserName("abca@abca.com")
         mainIdeasActivity = rule.activity
     }
 
@@ -46,22 +47,20 @@ class MainIdeasActivityInstrumentationTest {
     }
 
     @Test
-    fun check_addIdea_UI(){
+    fun add_new_idea(){
+        val title = "Successful_add_new_idea"
+        val tags = "Testing"
+
         Espresso.onView(withId(R.id.fab)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.addTitle)).check(matches(withHint(R.string.title)))
         Espresso.onView(withId(R.id.addDesc)).check(matches(withHint(R.string.desc)))
         Espresso.onView(withId(R.id.addCollab)).check(matches(withHint(R.string.collab)))
         Espresso.onView(withId(R.id.addTag)).check(matches(withHint(R.string.tags)))
-    }
-
-    @Test
-    fun add_new_idea(){
-        Espresso.onView(withId(R.id.fab)).perform(ViewActions.click())
-        val title = "Successful_add_new_idea"
-        val tags = "Testing"
 
         Espresso.onView((withId(R.id.addTitle)))
                 .perform(ViewActions.typeText(title))
+
+        Espresso.onView(withId(R.id.addDesc)).perform(ViewActions.typeText("Checking for details"))
 
         Espresso.onView((withId(R.id.addTag)))
                 .perform(ViewActions.typeText(tags))
@@ -75,11 +74,11 @@ class MainIdeasActivityInstrumentationTest {
 
     @Test
     fun check_idea_details() {
-        val title = "Detail Test"
+        val title = "Successful_add_new_idea"
         val desc = "Checking for details"
-        val tag = "Test"
+        val tag = "Testing"
         sleep(2000)
-        Espresso.onView(withText("Detail Test")).perform(ViewActions.click())
+        Espresso.onView(withText("Successful_add_new_idea")).perform(ViewActions.click())
         sleep(1000)
         Espresso.onView(withId(R.id.ideaName)).check(matches(withText(title)))
         Espresso.onView(withId(R.id.detailDesc)).check(matches(withText(desc)))

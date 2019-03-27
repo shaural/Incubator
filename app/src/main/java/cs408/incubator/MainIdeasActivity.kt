@@ -265,6 +265,8 @@ class MainIdeasActivity : AppCompatActivity() {
         println("In callback")
 
         println(skeys.toString())
+        if(skeys.size < 1)
+            Toast.makeText(applicationContext,"No ideas found!",Toast.LENGTH_SHORT).show()
 
         val layout = findViewById<LinearLayout>(R.id.linList)
         layout.removeAllViews()

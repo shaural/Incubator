@@ -14,6 +14,7 @@ class SetupAccountActivity : Activity() {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_setup_account)
+        setUserDispName("",0,::emptyFunc)
     }
 
     fun setDisplayName(v: View){
@@ -24,13 +25,17 @@ class SetupAccountActivity : Activity() {
             Toast.makeText(applicationContext,"Name cannot be empty!",Toast.LENGTH_SHORT).show()
 
         if(name.matches(reg)) {
-            setUserDispName(name,::startMain)
+            setUserDispName(name,1,::startMain)
         }
         else {
             Toast.makeText(applicationContext,"Invalid Characters in Name",Toast.LENGTH_SHORT).show()
         }
 
 
+    }
+
+    fun emptyFunc(b: Boolean){
+        return
     }
 
     fun startMain(b : Boolean){

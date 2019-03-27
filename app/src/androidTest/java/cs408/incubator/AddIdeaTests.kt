@@ -19,7 +19,7 @@ import org.junit.*
 import java.lang.Thread.sleep
 
 
-class AddIdeaActivityInstrumentationTest {
+class AddIdeaTests {
 
     @get:Rule
     public val rule = ActivityTestRule<AddIdeaActivity>(AddIdeaActivity::class.java)
@@ -36,7 +36,6 @@ class AddIdeaActivityInstrumentationTest {
 
     @Before
     fun setUp() {
-        updateUserName("newus@gmail.com")
         addIdeaActivity = rule.activity
         mainIdeasActivity = rule2.activity
         mdevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
